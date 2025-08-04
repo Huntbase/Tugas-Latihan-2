@@ -1,5 +1,5 @@
-    <style> 
-        .contact-footer{
+    <style>
+        .contact-footer {
             display: flex;
             flex-direction: row;
             background: #000;
@@ -11,6 +11,7 @@
             width: 100%;
             bottom: 0;
         }
+
         .contact-footer p {
             display: inline;
             margin: 0 1rem;
