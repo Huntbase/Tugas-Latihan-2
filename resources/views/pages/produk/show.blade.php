@@ -33,7 +33,7 @@
       <tbody>
         @foreach ($data_produk as $item)
         <tr>
-          <th scope="row">1</th>
+          <td>{{ $item->barang_id }}</td>
           <td>{{ $item->nama_barang }}</td>
           <td>{{ $item->category }}</td>
           <td>{{ $item->unit }}</td>
