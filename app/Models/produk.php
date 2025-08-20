@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class produk extends Model
 {
     // inisialisasi table produk
-    protected $table = 'tb_produk';
+    protected $table = 'produk';
 
     // inisialisasi primary key di dalam table
     protected $primaryKey = 'id_produk';
