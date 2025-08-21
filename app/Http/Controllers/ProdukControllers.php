@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Https\Request;
-use App\Models\produk;
+use Illuminate\Http\Request;
+use App\Models\Produk;
 use Illuminate\Support\Facades\DB;
 
 class ProdukControllers extends Controller
@@ -15,10 +15,35 @@ class ProdukControllers extends Controller
             'alamat' => 'bibung jakarta kota',
             'type' => 'Ruko'
         ];
-        $data = produk::get();
+        $data = Produk::get();
         return view('pages.produk.show', [
             'data_toko' => $data_toko,
             'data_produk' => $data
         ]);
+    }
+
+    public function create()
+    {
+        return view('pages.produk.addProduk');
+    }
+    public function store(Request $request)
+    {
+        // validasi
+        $request->validate([
+            'nama_barang' => 'required',
+            'category' => 'required',
+            'unit' => 'required',
+        ]);
+
+        // untuk menambah data ke tb_produk
+        // query tambah data
+        Produk::create([
+            'nama_barang' => $request->nama_barang,
+            'category' => $request->category,
+            'unit' => $request->unit,
+        ]);
+
+        // setelah data berhasil di tambah, akan mengarahkan ke halaman /produk dan memberikan notif menambahkan data
+        return redirect('/produk')->with('pesan', 'berhasil menambahkan data');
     }
 }
