@@ -32,7 +32,13 @@ class ProdukControllers extends Controller
         $request->validate([
             'nama_barang' => 'required',
             'category' => 'required',
-            'unit' => 'required',
+            'unit' => 'required|min:1',
+        ], [
+            'nama_barang.required' => 'Nama Barang wajib diisi!',
+            'category.required' => 'Categori wajib diisi!',
+            'unit.required' => 'Banyaknya unit wajib diisi!',
+            'unit.numeric' => 'Unit harus berupa angka!',
+            'unit.min' => 'Minimal unit adalah 1!',
         ]);
 
         // untuk menambah data ke tb_produk
