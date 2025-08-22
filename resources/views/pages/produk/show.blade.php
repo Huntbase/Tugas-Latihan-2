@@ -1,21 +1,24 @@
 @extends('layout.master')
 
 @section('konten')
-<h1> Daftar Produk Kami </h1>
-<hr>
-<a href="/produk/create" type="button" class="btn btn-primary mb-3"> Tambah Data </a>
+<h1 class="mb-4">Daftar Produk Kami</h1>
 
-<div class="alert alert-primary">
-  <b> Nama Toko : </b> {{ $data_toko['nama_toko'] }}
-  <br>
-  <b> Alamat : </b> {{ $data_toko['alamat'] }}
-  <br>
-  <b> Tipe Toko : </b> {{ $data_toko['type'] }}
+<a href="/produk/create" class="btn btn-primary mb-3">Tambah Data</a>
+
+<div class="alert alert-primary mb-3">
+  <b>Nama Toko:</b> {{ $data_toko['nama_toko'] }}<br>
+  <b>Alamat:</b> {{ $data_toko['alamat'] }}<br>
+  <b>Tipe Toko:</b> {{ $data_toko['type'] }}
 </div>
+
 @if (session('pesan'))
-<div class="alert alert-primary"> {{session ('pesan')}} </div>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{ session('pesan') }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 @endif
-<div class="card">
+
+<div class="card shadow-sm">
   <div class="card-header">
     Daftar Produk
   </div>
@@ -38,7 +41,7 @@
           <td>{{ $item->nama_barang }}</td>
           <td>{{ $item->category }}</td>
           <td>{{ $item->unit }}</td>
-          <td>{{ $item->created_at->format('d-m-Y') }}</td>
+          <td>{{ $item->created_at->format('d M Y') }}</td>
           <td class="text-center">
             <div class="d-flex justify-content-center gap-2">
               <a href="/produk/edit/{{ $item->barang_id }}" class="btn btn-warning btn-sm">Edit</a>
