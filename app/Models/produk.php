@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class produk extends Model
+class Produk extends Model
 {
     // inisialisasi table produk
     protected $table = 'produk';
 
     // inisialisasi primary key di dalam table
-    protected $primaryKey = 'id_produk';
+    protected $primaryKey = 'barang_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     // inisialisasi data yang dapat kita isi
     protected $fillable = ['nama_barang', 'category', 'unit', 'price'];

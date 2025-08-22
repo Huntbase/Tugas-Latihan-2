@@ -12,6 +12,8 @@ Route::get('/produk', [ProdukControllers::class, 'index']); // read data menampi
 
 Route::get('/produk/create', [ProdukControllers::class, 'create']); // menampilkan halaman form data
 Route::post('/produk', [ProdukControllers::class, 'store']); // untuk mengelola data yang telah dikriim dari halaman form data
+
+Route::get('/produk/{id}', [ProdukControllers::class, 'show']);
 Route::get('/auditLog', function () {
     return view('pages.auditLog');
 });

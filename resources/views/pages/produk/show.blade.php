@@ -34,14 +34,17 @@
       <tbody>
         @foreach ($data_produk as $item)
         <tr>
-          <td>{{ $item->barang_id }}</td>
+          <td>{{ $loop->iteration }}</td>
           <td>{{ $item->nama_barang }}</td>
           <td>{{ $item->category }}</td>
           <td>{{ $item->unit }}</td>
           <td>{{ $item->created_at->format('d-m-Y') }}</td>
-          <td>
-            <a href="/produk/edit/{{ $item->id }}" class="btn btn-warning btn-sm">Edit</a>
-            <a href="/produk/hapus/{{ $item->id }}" class="btn btn-danger btn-sm" onclick="return confirm('Yakin mau hapus?')">Hapus</a>
+          <td class="text-center">
+            <div class="d-flex justify-content-center gap-2">
+              <a href="/produk/edit/{{ $item->barang_id }}" class="btn btn-warning btn-sm">Edit</a>
+              <a href="/produk/hapus/{{ $item->barang_id }}" class="btn btn-danger btn-sm" onclick="return confirm('Yakin mau hapus?')">Hapus</a>
+              <a href="/produk/{{ $item->barang_id }}" class="btn btn-info btn-sm">Detail</a>
+            </div>
           </td>
         </tr>
         @endforeach

@@ -52,4 +52,13 @@ class ProdukControllers extends Controller
         // setelah data berhasil di tambah, akan mengarahkan ke halaman /produk dan memberikan notif menambahkan data
         return redirect('/produk')->with('pesan', 'berhasil menambahkan data');
     }
+
+    public function show($id)
+    {
+        // perintah untuk mengambil data '
+        $data = Produk::findOrFail($id);
+        return view('pages.produk.detail', [
+            'produk' => $data,
+        ]);
+    }
 }
