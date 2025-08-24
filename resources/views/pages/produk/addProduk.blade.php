@@ -19,9 +19,15 @@
                 <div class="row-sm-6">
                     <div class="mb-3">
                         <label class="form-label">Category</label>
-                        <input type="number" name="category" class="form-control" value="{{old('category')}}">
+                        <select name="category" class="form-control">
+                            <option value="">-- Pilih Category --</option>
+                            <option value="Makanan" {{ old('category') == 'Makanan' ? 'selected' : '' }}>Makanan</option>
+                            <option value="Minuman" {{ old('category') == 'Minuman' ? 'selected' : '' }}>Minuman</option>
+                            <option value="Elektronik" {{ old('category') == 'Elektronik' ? 'selected' : '' }}>Elektronik</option>
+                            <option value="Alat Rumah Tangga" {{ old('category') == 'Alat Rumah Tangga' ? 'selected' : '' }}>Alat Rumah Tangga</option>
+                        </select>
                         @error('category')
-                        <div id="emailHelp" class="form-text text-danger">{{$message}}</div>
+                        <div id="emailHelp" class="form-text text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>

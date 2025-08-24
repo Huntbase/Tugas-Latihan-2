@@ -106,7 +106,7 @@
 
       <!-- Product dengan submenu -->
       <li class="nav-item mb-2">
-        <a class="nav-link d-flex justify-content-between align-items-center {{ request()->is('produk*') ? '' : 'collapsed' }}" data-bs-toggle="collapse" href="#produkMenu" role="button" aria-expanded="{{ request()->is('produk*') ? 'true' : 'false' }}">
+        <a class="nav-link d-flex justify-content-between align-items-center {{ request()->is('produk*') ? '' : 'collapsed' }}" data-bs-toggle="collapse" href="/produk" role="button" aria-expanded="{{ request()->is('produk*') ? 'true' : 'false' }}">
           <span>
             <!-- Masukkan icon di sini -->
             <i class="bi bi-box-seam"></i>

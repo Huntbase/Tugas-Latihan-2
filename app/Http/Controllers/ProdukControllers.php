@@ -32,7 +32,7 @@ class ProdukControllers extends Controller
         $request->validate([
             'nama_barang' => 'required',
             'category' => 'required',
-            'unit' => 'required|min:1',
+            'unit' => 'required|numeric|min:1',
         ], [
             'nama_barang.required' => 'Nama Barang wajib diisi!',
             'category.required' => 'Categori wajib diisi!',
@@ -55,10 +55,44 @@ class ProdukControllers extends Controller
 
     public function show($id)
     {
-        // perintah untuk mengambil data '
+        // perintah untuk mengambil data 
         $data = Produk::findOrFail($id);
+
         return view('pages.produk.detail', [
             'produk' => $data,
         ]);
+    }
+
+    public function edit($id)
+    {
+        // mengambil 1 data spesifik id dari id yang dikirimkan yang spesifik
+        $data = Produk::findOrFail($id);
+
+        return view('pages.produk.edit', [
+            'data' => $data,
+        ]);
+    }
+
+    public function update($id, Request $request)
+    {
+        $request->validate([
+            'nama_barang' => 'required',
+            'category' => 'required',
+            'unit' => 'required|numeric|min:1',
+        ], [
+            'nama_barang.required' => 'Nama Barang wajib diisi!',
+            'category.required' => 'Categori wajib diisi!',
+            'unit.required' => 'Banyaknya unit wajib diisi!',
+            'unit.numeric' => 'Unit harus berupa angka!',
+            'unit.min' => 'Minimal unit adalah 1!',
+        ]);
+
+        // query untuk simpan data yang telah kita update
+        produk::where('barang_id', $id)->update([
+            'nama_barang' => $request->nama_barang,
+            'category' => $request->category,
+            'unit' => $request->unit,
+        ]);
+        return redirect('/produk')->with('pesan', 'berhasil Mengupdate data');
     }
 }

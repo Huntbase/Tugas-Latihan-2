@@ -44,8 +44,8 @@
           <td>{{ $item->created_at->format('d M Y') }}</td>
           <td class="text-center">
             <div class="d-flex justify-content-center gap-2">
-              <a href="/produk/edit/{{ $item->barang_id }}" class="btn btn-warning btn-sm">Edit</a>
-              <a href="/produk/hapus/{{ $item->barang_id }}" class="btn btn-danger btn-sm" onclick="return confirm('Yakin mau hapus?')">Hapus</a>
+              <a href="/produk/{{ $item->barang_id }}/edit" class="btn btn-warning btn-sm">Edit</a>
+              <a href="/produk/{{ $item->barang_id }}/hapus" class="btn btn-danger btn-sm" onclick="return confirm('Yakin mau hapus?')">Hapus</a>
               <a href="/produk/{{ $item->barang_id }}" class="btn btn-info btn-sm">Detail</a>
             </div>
           </td>
