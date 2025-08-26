@@ -17,6 +17,9 @@ Route::get('/produk/{id}', [ProdukControllers::class, 'show']); // untuk menampi
 
 Route::get('/produk/{id}/edit', [ProdukControllers::class, 'edit']);
 Route::put('/produk/{id}', [ProdukControllers::class, 'update']);
+
+Route::delete('/produk/{id}', [ProdukControllers::class, 'destroy']);
+
 Route::get('/auditLog', function () {
     return view('pages.auditLog');
 });

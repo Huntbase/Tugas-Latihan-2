@@ -8,14 +8,19 @@ use Illuminate\Support\Facades\DB;
 
 class ProdukControllers extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $data_toko = [
             'nama_toko' => 'Bibong Jaya Abadi',
             'alamat' => 'bibung jakarta kota',
             'type' => 'Ruko'
         ];
-        $data = Produk::get();
+
+        $search = $request->keyword;
+
+        $data = Produk::when($search, function ($query, $search) {
+            return $query->where('nama_barang', 'like', "%{$search}%");
+        })->get();
         return view('pages.produk.show', [
             'data_toko' => $data_toko,
             'data_produk' => $data
@@ -88,11 +93,18 @@ class ProdukControllers extends Controller
         ]);
 
         // query untuk simpan data yang telah kita update
-        produk::where('barang_id', $id)->update([
+        Produk::where('barang_id', $id)->update([
             'nama_barang' => $request->nama_barang,
             'category' => $request->category,
             'unit' => $request->unit,
         ]);
         return redirect('/produk')->with('pesan', 'berhasil Mengupdate data');
+    }
+
+    public function destroy($id)
+    {
+        // query untuk menghapus data di database
+        Produk::findOrFail($id)->delete();
+        return redirect('/produk')->with('pesan', 'data berhasil di hapus');
     }
 }
