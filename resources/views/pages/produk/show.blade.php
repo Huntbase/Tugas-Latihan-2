@@ -22,11 +22,14 @@
   <div class="card-header d-flex justify-content-between align-items-center">
     <h5 class="mb-0">Daftar Produk</h5>
     <div class="d-flex gap-2">
+      @if (Request()-> keyword != '')
       <a href="/produk" class="btn btn-info">Reset</a>
+      @endif
       <form class="input-group" style="width: 350px;">
         <input
           type="text"
           class="form-control"
+          value="{{Request()->keyword}}"
           placeholder="Cari produk produk"
           name="keyword"
           aria-label="Cari produk"
