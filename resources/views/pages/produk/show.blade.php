@@ -21,18 +21,21 @@
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h5 class="mb-0">Daftar Produk</h5>
-    <form class="input-group" style="width: 350px;">
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Cari produk produk"
-        name="keyword"
-        aria-label="Cari produk"
-        aria-describedby="button-addon2">
-      <button class="btn btn-success" type="submit" id="button-addon2">
-        Cari Data
-      </button>
-    </form>
+    <div class="d-flex gap-2">
+      <a href="/produk" class="btn btn-info">Reset</a>
+      <form class="input-group" style="width: 350px;">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Cari produk produk"
+          name="keyword"
+          aria-label="Cari produk"
+          aria-describedby="button-addon2">
+        <button class="btn btn-success" type="submit" id="button-addon2">
+          Cari Data
+        </button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -49,7 +52,7 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($data_produk as $item)
+      @forelse ($data_produk as $item)
       <tr>
         <td>{{ $loop->iteration }}</td>
         <td>{{ $item->nama_barang }}</td>
@@ -66,7 +69,12 @@
           </div>
         </td>
       </tr>
-      @endforeach
+      @empty
+      <tr>
+        <td colspan="6" class="text-center">Data yang anda cari tidak ada!</td>
+      </tr>
+      @endforelse
+
     </tbody>
   </table>
 </div>
