@@ -1,13 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProdukControllers;
 use App\Models\produk;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('pages.home');
-});
+Route::get('/dashboard', [DashboardController::class, 'index']);
 
 Route::get('/produk', [ProdukControllers::class, 'index']); // read data menampilkan data
 

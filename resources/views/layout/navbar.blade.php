@@ -2,7 +2,10 @@
   /* Sidebar dasar */
   #sidebar {
     width: 250px;
-    transition: width 0.3s, background-color 0.3s;
+    background-color: #f8f9fa;
+    /* Light mode default */
+    color: #000;
+    transition: width 0.3s, background-color 0.3s, color 0.3s;
   }
 
   #sidebar.collapsed {
@@ -27,8 +30,7 @@
   }
 
   #sidebar.collapsed .nav-link span {
-    opacity: 0;
-    pointer-events: none;
+    display: none;
   }
 
   #sidebar .navbar-brand {
@@ -36,13 +38,13 @@
   }
 
   #sidebar.collapsed .navbar-brand {
-    opacity: 0;
-    pointer-events: none;
+    display: none;
   }
 
   #sidebar .nav-link i {
     min-width: 30px;
     text-align: center;
+    display: inline-block;
   }
 
   .sidebar-arrow {
@@ -97,8 +99,8 @@
 
       <!-- Home -->
       <li class="nav-item mb-2">
-        <a href="/" class="nav-link {{ request()->is('/') ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Home">
-          <!-- Masukkan icon di sini -->
+        <a href="/dashboard" class="nav-link {{ request()->is('/') ? 'active' : '' }}"
+          data-bs-toggle="tooltip" data-bs-placement="right" title="Home">
           <i class="bi bi-house-door-fill"></i>
           <span class="ms-2">Home</span>
         </a>
@@ -110,25 +112,24 @@
           data-bs-toggle="collapse"
           href="#produkMenu"
           role="button"
-          aria-expanded="{{ request()->is('produk*') ? 'true' : 'false' }}"> <span>
-            <!-- Masukkan icon di sini -->
+          aria-expanded="{{ request()->is('produk*') ? 'true' : 'false' }}"
+          aria-controls="produkMenu">
+          <span class="d-flex align-items-center">
             <i class="bi bi-box-seam"></i>
             <span class="ms-2">Product</span>
           </span>
           <i class="bi bi-caret-right-fill sidebar-arrow {{ request()->is('produk*') ? 'rotate' : '' }}"></i>
         </a>
-        <div class="collapse {{ request()->is('produk*') ? 'show' : '' }}" id="produkMenu">
+        <div class="collapse {{ request()->is('produk*') ? 'show' : '' }}" id="produkMenu" data-bs-parent="#sidebar">
           <ul class="nav flex-column">
             <li class="nav-item">
               <a href="/produk" class="nav-link {{ request()->is('produk') ? 'active' : '' }}">
-                <!-- Masukkan icon submenu di sini (opsional) -->
                 <i class="bi bi-card-list"></i>
                 <span class="ms-2">Daftar Produk</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="/produk/create" class="nav-link {{ request()->is('produk/create') ? 'active' : '' }}">
-                <!-- Masukkan icon submenu di sini (opsional) -->
                 <i class="bi bi-plus-square"></i>
                 <span class="ms-2">Tambah Produk</span>
               </a>
@@ -141,7 +142,6 @@
       <li class="nav-item mb-2">
         <a href="/auditLog" class="nav-link {{ request()->is('audit-log') ? 'active' : '' }}"
           data-bs-toggle="tooltip" data-bs-placement="right" title="Audit Log">
-          <!-- Masukkan icon di sini -->
           <i class="bi bi-journal-text"></i>
           <span class="ms-2">Audit Log</span>
         </a>
@@ -149,17 +149,17 @@
 
       <!-- Login -->
       <li class="nav-item mb-2">
-        <a href="/login" class="nav-link {{ request()->is('login') ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Login">
-          <!-- Masukkan icon di sini -->
+        <a href="/login" class="nav-link {{ request()->is('login') ? 'active' : '' }}"
+          data-bs-toggle="tooltip" data-bs-placement="right" title="Login">
           <i class="bi bi-person"></i>
           <span class="ms-2">Login</span>
         </a>
       </li>
-
     </ul>
 
     <!-- Logout -->
-    <a href="/logout" class="btn btn-danger w-100 mt-auto" data-bs-toggle="tooltip" data-bs-placement="right" title="Logout">Logout</a>
+    <a href="/logout" class="btn btn-danger w-100 mt-auto"
+      data-bs-toggle="tooltip" data-bs-placement="right" title="Logout">Logout</a>
   </nav>
 
   <!-- Konten utama -->
