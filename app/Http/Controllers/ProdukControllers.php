@@ -92,14 +92,20 @@ class ProdukControllers extends Controller
             'unit.min' => 'Minimal unit adalah 1!',
         ]);
 
-        // query untuk simpan data yang telah kita update
-        Produk::where('barang_id', $id)->update([
-            'nama_barang' => $request->nama_barang,
-            'category' => $request->category,
-            'unit' => $request->unit,
-        ]);
+        // Ambil instance model
+        $produk = Produk::findOrFail($id);
+
+        // Set atribut baru
+        $produk->nama_barang = $request->nama_barang;
+        $produk->category   = $request->category;
+        $produk->unit       = $request->unit;
+
+        // Simpan → akan memicu trait Auditable
+        $produk->save();
+
         return redirect('/produk')->with('pesan', 'berhasil Mengupdate data');
     }
+
 
     public function destroy($id)
     {

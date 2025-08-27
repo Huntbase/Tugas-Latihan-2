@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Auditable;
 
 class Produk extends Model
 {
+    use Auditable;
+
     // inisialisasi table produk
     protected $table = 'produk';
 
@@ -15,7 +18,7 @@ class Produk extends Model
     protected $keyType = 'int';
 
     // inisialisasi data yang dapat kita isi
-    protected $fillable = ['nama_barang', 'category', 'unit', 'price'];
+    protected $fillable = ['nama_barang', 'category', 'unit'];
 
     // inisialisasi data yang tidak dapat kita isi
     // protected $guarded = [''];

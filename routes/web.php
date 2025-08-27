@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ProdukControllers;
 use App\Models\produk;
 use Illuminate\Support\Facades\Route;
@@ -20,9 +21,8 @@ Route::put('/produk/{id}', [ProdukControllers::class, 'update']);
 
 Route::delete('/produk/{id}', [ProdukControllers::class, 'destroy']);
 
-Route::get('/auditLog', function () {
-    return view('pages.auditLog');
-});
+Route::get('/auditLog', [AuditLogController::class, 'index'])->name('auditLog.index');
+
 
 Route::get('/login', function () {
     return view('pages.login');

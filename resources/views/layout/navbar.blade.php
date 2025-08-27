@@ -139,7 +139,8 @@
 
       <!-- Audit Log -->
       <li class="nav-item mb-2">
-        <a href="/auditLog" class="nav-link {{ request()->is('auditLog') ? 'active' : '' }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Audit Log">
+        <a href="/auditLog" class="nav-link {{ request()->is('audit-log') ? 'active' : '' }}"
+          data-bs-toggle="tooltip" data-bs-placement="right" title="Audit Log">
           <!-- Masukkan icon di sini -->
           <i class="bi bi-journal-text"></i>
           <span class="ms-2">Audit Log</span>
