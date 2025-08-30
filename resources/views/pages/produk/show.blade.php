@@ -3,7 +3,7 @@
 @section('konten')
 <h1 class="mb-4">Daftar Produk Kami</h1>
 
-<a href="/produk/create" class="btn btn-primary mb-3">Tambah Data</a>
+<a href="/produk/create" class="btn btn-primary mb-3">Tambah Produk</a>
 
 <div class="alert alert-primary mb-3">
   <b>Nama Toko:</b> {{ $data_toko['nama_toko'] }}<br>

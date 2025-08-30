@@ -2,7 +2,7 @@
 
 @section('konten')
 <div class="card">
-    <div class="card-header">tambah data produk</div>
+    <div class="card-header">Tambah produk</div>
     <div class="card-body">
         <form action="/produk" method="POST">
             @csrf

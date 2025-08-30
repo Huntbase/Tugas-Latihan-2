@@ -1,10 +1,5 @@
 <style>
   /* ===========================
-   Import Font
-=========================== */
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-  /* ===========================
    Global Reset
 =========================== */
   * {
@@ -80,7 +75,6 @@
 
   .sidebar header .image-text img,
   header .image-text .img {
-    width: 40px;
     border-radius: 6px;
   }
 
@@ -122,13 +116,29 @@
     opacity: 1;
   }
 
+  .sidebar .header-text .name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+  }
+
   .sidebar.close .text {
     display: none;
     opacity: 0;
   }
 
+  .sidebar .image-text img {
+    width: 70px;
+    border-radius: 6px;
+  }
+
   .sidebar .image {
-    min-width: 60px;
+    min-width: 70px;
+    display: flex;
+    align-items: center;
+  }
+
+  .sidebar header .image-text {
     display: flex;
     align-items: center;
   }
@@ -190,6 +200,7 @@
 =========================== */
   .menu-bar {
     height: calc(100% - 50px);
+    padding-bottom: 25px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -283,14 +294,12 @@
   <header>
     <div class="image-text">
       <span class="image">
-        <img src="profile.jpg" alt="profile">
+        <img src="{{ asset('images/warehouse.png') }}" alt="profile">
       </span>
       <div class="text header-text">
-        <span class="name">CodingLab</span>
-        <span class="profession">Web Developer</span>
+        <span class="name">Warehouse</span>
       </div>
     </div>
-
     <i class='bx bx-chevron-right toggle'></i>
   </header>
 
@@ -314,7 +323,7 @@
           </a>
         </li>
         <li class="nav-link">
-          <a href="/addProduk">
+          <a href="/produk/create">
             <i class="bx bx-cart-add icon"></i>
             <span class="text nav-text">Tambah Produk</span>
           </a>
