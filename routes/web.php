@@ -23,6 +23,6 @@ Route::delete('/produk/{id}', [ProdukControllers::class, 'destroy']);
 Route::get('/auditLog', [AuditLogController::class, 'index'])->name('auditLog.index');
 
 
-Route::get('/login', function () {
+Route::get('/', function () {
     return view('pages.login');
 });

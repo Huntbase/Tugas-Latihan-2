@@ -1,224 +1,373 @@
 <style>
-  /* Sidebar dasar */
-  #sidebar {
-    width: 250px;
-    background-color: #f8f9fa;
-    /* Light mode default */
-    color: #000;
-    transition: width 0.3s, background-color 0.3s, color 0.3s;
+  /* ===========================
+   Import Font
+=========================== */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  /* ===========================
+   Global Reset
+=========================== */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
   }
 
-  #sidebar.collapsed {
-    width: 70px;
+  /* ===========================
+   CSS Variables
+=========================== */
+  :root {
+    --body-color: #e4e9f7;
+    --sidebar-color: #fff;
+    --primary-color: #695CFE;
+    --primary-color-light: #f6f5ff;
+    --toggle-color: #ddd;
+    --text-color: #707070;
+
+    --trans-02: all 0.2s ease;
+    --trans-03: all 0.3s ease;
+    --trans-04: all 0.4s ease;
+    --trans-05: all 0.5s ease;
   }
 
-  #sidebar.dark {
-    background-color: #1e1e2f;
-    color: #fff;
+  body.dark {
+    --body-color: #18191a;
+    --sidebar-color: #242526;
+    --primary-color: #3a3b3c;
+    --primary-color-light: #3a3b3c;
+    --toggle-color: #fff;
+    --text-color: #ccc;
   }
 
-  #sidebar.dark .nav-link {
-    color: #fff;
+  /* ===========================
+   Body
+=========================== */
+  body {
+    height: 100vh;
+    background-color: var(--body-color);
   }
 
-  #sidebar.dark .nav-link.active {
-    background-color: #343454;
-  }
-
-  #sidebar .nav-link span {
-    transition: opacity 0.3s;
-  }
-
-  #sidebar.collapsed .nav-link span {
-    display: none;
-  }
-
-  #sidebar .navbar-brand {
-    transition: opacity 0.3s;
-  }
-
-  #sidebar.collapsed .navbar-brand {
-    display: none;
-  }
-
-  #sidebar .nav-link i {
-    min-width: 30px;
-    text-align: center;
-    display: inline-block;
-  }
-
-  .sidebar-arrow {
-    transition: transform 0.3s;
-  }
-
-  .sidebar-arrow.rotate {
-    transform: rotate(90deg);
-  }
-
-  .nav .collapse .nav-link {
-    padding-left: 2rem;
-  }
-
-  .nav .collapse .collapse .nav-link {
-    padding-left: 3rem;
-  }
-
-  /* Resize handle */
-  #sidebar-resize {
-    width: 5px;
-    cursor: ew-resize;
-    position: absolute;
+  /* ===========================
+   Sidebar
+=========================== */
+  .sidebar {
+    position: fixed;
     top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+    background: var(--sidebar-color);
+    transition: var(--trans-05);
+  }
+
+  .sidebar.close {
+    width: 88px;
+  }
+
+  /* ---------------------------
+   Sidebar Header
+--------------------------- */
+  .sidebar header {
+    position: relative;
+  }
+
+  .sidebar header .image-text {
+    display: flex;
+    align-items: center;
+  }
+
+  .sidebar header .image-text img,
+  header .image-text .img {
+    width: 40px;
+    border-radius: 6px;
+  }
+
+  .sidebar header .toggle {
+    position: absolute;
+    top: 50%;
+    right: -25px;
+    transform: translateY(-50%) rotate(180deg);
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: var(--sidebar-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: var(--trans-03);
+  }
+
+  .sidebar.close header .toggle {
+    transform: translateY(-50%);
+  }
+
+  body.dark .sidebar header .toggle {
+    transform: rotate(180deg);
+    color: var(--text-color);
+  }
+
+  /* ---------------------------
+   Sidebar Text & Image
+--------------------------- */
+  .sidebar .text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-color);
+    transition: var(--trans-03);
+    white-space: nowrap;
+    opacity: 1;
+  }
+
+  .sidebar.close .text {
+    display: none;
+    opacity: 0;
+  }
+
+  .sidebar .image {
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ---------------------------
+   Sidebar List Items
+--------------------------- */
+  .sidebar ul {
+    padding-left: 0;
+  }
+
+  .sidebar li {
+    height: 50px;
+    margin-top: 10px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .sidebar li a {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--trans-04);
+  }
+
+  .sidebar li a:hover {
+    background: var(--primary-color);
+  }
+
+  .sidebar li a:hover .icon,
+  .sidebar li a:hover .text {
+    color: var(--sidebar-color);
+  }
+
+  body.dark .sidebar li a:hover .icon,
+  body.dark .sidebar li a:hover .text {
+    color: var(--text-color);
+  }
+
+  .sidebar li .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    font-size: 20px;
+    color: var(--text-color);
+  }
+
+  .sidebar li .text {
+    color: var(--text-color);
+  }
+
+  /* ===========================
+   Menu Bar & Dark Mode
+=========================== */
+  .menu-bar {
+    height: calc(100% - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .menu-bar .mode {
+    position: relative;
+    border-radius: 6px;
+    background: var(--primary-color-light);
+  }
+
+  .menu-bar .mode i.sun {
+    position: absolute;
+    transition: var(--trans-03);
+    opacity: 0;
+  }
+
+  body.dark .menu-bar .mode i.sun {
+    opacity: 1;
+  }
+
+  body.dark .menu-bar .mode i.moon {
+    opacity: 0;
+  }
+
+  .menu-bar .mode .toggle-switch {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     right: 0;
     height: 100%;
-    background-color: transparent;
+    min-width: 60px;
+    cursor: pointer;
+    border-radius: 6px;
+    background: var(--primary-color-light);
+  }
+
+  .toggle-switch .switch {
+    position: relative;
+    height: 22px;
+    width: 44px;
+    border-radius: 25px;
+    background: var(--toggle-color);
+  }
+
+  .switch::before {
+    content: '';
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    background: var(--sidebar-color);
+    transition: var(--trans-03);
+  }
+
+  body.dark .switch::before {
+    left: 24px;
+  }
+
+  .menu-bar .mode .moon-sun {
+    height: 50px;
+    width: 60px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ===========================
+   Search Box
+=========================== */
+  .sidebar .search-box {
+    background: var(--primary-color-light);
+    border-radius: 6px;
+  }
+
+  .search-box input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: 500;
+    background: var(--primary-color-light);
+    border-radius: 6px;
   }
 </style>
+<nav class="sidebar close">
+  <header>
+    <div class="image-text">
+      <span class="image">
+        <img src="profile.jpg" alt="profile">
+      </span>
+      <div class="text header-text">
+        <span class="name">CodingLab</span>
+        <span class="profession">Web Developer</span>
+      </div>
+    </div>
 
-<div class="d-flex position-relative">
-  <!-- Sidebar -->
-  <nav id="sidebar" class="bg-light border-end vh-100 d-flex flex-column p-3 position-relative">
-    <div id="sidebar-resize"></div>
+    <i class='bx bx-chevron-right toggle'></i>
+  </header>
 
-    <!-- Logo -->
-    <a class="navbar-brand mb-3 d-flex align-items-center" href="/">
-      <img src="/logo.png" alt="Logo" width="30" class="me-2">
-      <span>My Store</span>
-    </a>
+  <div class="menu-bar">
+    <div class="menu">
+      <li class="search-box">
+        <i class="bx bx-search icon"></i>
+        <input type="search" placeholder="Search...">
+      </li>
+      <ul class="menu-links">
+        <li class="nav-link">
+          <a href="/dashboard">
+            <i class="bx bx-grid-alt icon"></i>
+            <span class="text nav-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-link">
+          <a href="/produk">
+            <i class="bx bx-box icon"></i>
+            <span class="text nav-text">Produk</span>
+          </a>
+        </li>
+        <li class="nav-link">
+          <a href="/addProduk">
+            <i class="bx bx-cart-add icon"></i>
+            <span class="text nav-text">Tambah Produk</span>
+          </a>
+        </li>
+        <li class="nav-link">
+          <a href="/auditLog">
+            <i class="bx bx-clipboard icon"></i>
+            <span class="text nav-text">Audit Log</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-    <!-- Theme switch -->
-    <button class="btn btn-secondary mb-3" id="themeToggle">Toggle Dark/Light</button>
-
-    <!-- Toggle collapse mobile -->
-    <button class="btn btn-secondary mb-3 d-lg-none" id="sidebarToggle">
-      <i class="bi bi-list"></i>
-    </button>
-
-    <!-- Menu -->
-    <ul class="nav flex-column flex-grow-1">
-
-      <!-- Home -->
-      <li class="nav-item mb-2">
-        <a href="/dashboard" class="nav-link {{ request()->is('/') ? 'active' : '' }}"
-          data-bs-toggle="tooltip" data-bs-placement="right" title="Home">
-          <i class="bi bi-house-door-fill"></i>
-          <span class="ms-2">Home</span>
+    <div class="bottom-content">
+      <li class="">
+        <a href="">
+          <i class="bx bx-log-out icon"></i>
+          <span class="text nav-text">Logout</span>
         </a>
       </li>
+      <li class="mode">
+        <div class="moon-sun">
+          <i class="bx bx-moon icon moon"></i>
+          <i class="bx bx-sun icon sun"></i>
+        </div>
+        <span class="mode-text text">Dark Mode</span>
 
-      <!-- Product dengan submenu -->
-      <li class="nav-item mb-2">
-        <a class="nav-link d-flex justify-content-between align-items-center {{ request()->is('produk*') ? '' : 'collapsed' }}"
-          data-bs-toggle="collapse"
-          href="#produkMenu"
-          role="button"
-          aria-expanded="{{ request()->is('produk*') ? 'true' : 'false' }}"
-          aria-controls="produkMenu">
-          <span class="d-flex align-items-center">
-            <i class="bi bi-box-seam"></i>
-            <span class="ms-2">Product</span>
-          </span>
-          <i class="bi bi-caret-right-fill sidebar-arrow {{ request()->is('produk*') ? 'rotate' : '' }}"></i>
-        </a>
-        <div class="collapse {{ request()->is('produk*') ? 'show' : '' }}" id="produkMenu" data-bs-parent="#sidebar">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a href="/produk" class="nav-link {{ request()->is('produk') ? 'active' : '' }}">
-                <i class="bi bi-card-list"></i>
-                <span class="ms-2">Daftar Produk</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/produk/create" class="nav-link {{ request()->is('produk/create') ? 'active' : '' }}">
-                <i class="bi bi-plus-square"></i>
-                <span class="ms-2">Tambah Produk</span>
-              </a>
-            </li>
-          </ul>
+        <div class="toggle-switch">
+          <span class="switch"></span>
         </div>
       </li>
-
-      <!-- Audit Log -->
-      <li class="nav-item mb-2">
-        <a href="/auditLog" class="nav-link {{ request()->is('audit-log') ? 'active' : '' }}"
-          data-bs-toggle="tooltip" data-bs-placement="right" title="Audit Log">
-          <i class="bi bi-journal-text"></i>
-          <span class="ms-2">Audit Log</span>
-        </a>
-      </li>
-
-      <!-- Login -->
-      <li class="nav-item mb-2">
-        <a href="/login" class="nav-link {{ request()->is('login') ? 'active' : '' }}"
-          data-bs-toggle="tooltip" data-bs-placement="right" title="Login">
-          <i class="bi bi-person"></i>
-          <span class="ms-2">Login</span>
-        </a>
-      </li>
-    </ul>
-
-    <!-- Logout -->
-    <a href="/logout" class="btn btn-danger w-100 mt-auto"
-      data-bs-toggle="tooltip" data-bs-placement="right" title="Logout">Logout</a>
-  </nav>
-
-  <!-- Konten utama -->
-  <div class="flex-grow-1 p-4">
-    <button class="btn btn-primary mb-3 d-none d-lg-block" id="sidebarToggleDesktop">
-      <i class="bi bi-list"></i> Toggle Sidebar
-    </button>
-    @yield('konten')
+    </div>
   </div>
-</div>
+</nav>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('sidebarToggle');
-    const toggleDesktopBtn = document.getElementById('sidebarToggleDesktop');
-    const themeToggle = document.getElementById('themeToggle');
+  const body = document.querySelector("body"),
+    sidebar = document.querySelector(".sidebar"),
+    toggle = document.querySelector(".toggle"),
+    searchBtn = document.querySelector(".search-box"),
+    modeSwitch = document.querySelector(".toggle-switch"),
+    modeText = document.querySelector(".mode-text");
 
-    // Toggle sidebar
-    toggleBtn.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
-    toggleDesktopBtn.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
-
-    // Theme toggle
-    themeToggle.addEventListener('click', () => sidebar.classList.toggle('dark'));
-
-    // Tooltip
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function(tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-    // Submenu arrow animation
-    var collapseElements = document.querySelectorAll('#sidebar .collapse');
-    collapseElements.forEach(function(collapseEl) {
-      collapseEl.addEventListener('show.bs.collapse', function() {
-        const arrow = collapseEl.previousElementSibling.querySelector('.sidebar-arrow');
-        if (arrow) arrow.classList.add('rotate');
-      });
-      collapseEl.addEventListener('hide.bs.collapse', function() {
-        const arrow = collapseEl.previousElementSibling.querySelector('.sidebar-arrow');
-        if (arrow) arrow.classList.remove('rotate');
-      });
-    });
-
-    // Sidebar resize
-    const resizeHandle = document.getElementById('sidebar-resize');
-    let isResizing = false;
-    resizeHandle.addEventListener('mousedown', e => {
-      isResizing = true;
-    });
-    document.addEventListener('mousemove', e => {
-      if (!isResizing) return;
-      let newWidth = e.clientX;
-      if (newWidth < 70) newWidth = 70;
-      if (newWidth > 400) newWidth = 400;
-      sidebar.style.width = newWidth + 'px';
-    });
-    document.addEventListener('mouseup', e => {
-      isResizing = false;
-    });
+  toggle.addEventListener("click", () => {
+    sidebar.classList.toggle("close");
   });
+  modeSwitch.addEventListener("click", () => {
+    body.classList.toggle("dark");
+  });
+
+  if (body.classList.contains("dark")) {
+    modeText.innerText = "Light Mode"
+  } else {
+    modeText.innerText = "Dark Mode"
+  }
 </script>
