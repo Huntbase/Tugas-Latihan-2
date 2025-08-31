@@ -1,6 +1,27 @@
 @extends('layout.master')
 
 @section('konten')
+<style>
+    .card {
+        background-color: var(--sidebar-color);
+        color: var(--text-color);
+        transition: var(--trans-03);
+    }
+
+    .card .card-title {
+        color: var(--text-color);
+    }
+
+    .badge {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .btn {
+        font-family: 'Poppins', sans-serif;
+        border-radius: 8px;
+        transition: var(--trans-03);
+    }
+</style>
 <h1 class="mb-4">Detail Produk Kami</h1>
 
 <div class="card mb-4 shadow-sm">

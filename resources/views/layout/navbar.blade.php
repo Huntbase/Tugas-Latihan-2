@@ -1,41 +1,5 @@
 <style>
   /* ===========================
-   Global Reset
-=========================== */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
-
-  /* ===========================
-   CSS Variables
-=========================== */
-  :root {
-    --body-color: #e4e9f7;
-    --sidebar-color: #fff;
-    --primary-color: #695CFE;
-    --primary-color-light: #f6f5ff;
-    --toggle-color: #ddd;
-    --text-color: #707070;
-
-    --trans-02: all 0.2s ease;
-    --trans-03: all 0.3s ease;
-    --trans-04: all 0.4s ease;
-    --trans-05: all 0.5s ease;
-  }
-
-  body.dark {
-    --body-color: #18191a;
-    --sidebar-color: #242526;
-    --primary-color: #3a3b3c;
-    --primary-color-light: #3a3b3c;
-    --toggle-color: #fff;
-    --text-color: #ccc;
-  }
-
-  /* ===========================
    Body
 =========================== */
   body {
@@ -367,16 +331,29 @@
     modeSwitch = document.querySelector(".toggle-switch"),
     modeText = document.querySelector(".mode-text");
 
+  // === Cek dari localStorage saat pertama kali load ===
+  if (localStorage.getItem("theme") === "dark") {
+    body.classList.add("dark");
+    modeText.innerText = "Light Mode";
+  } else {
+    modeText.innerText = "Dark Mode";
+  }
+
+  // === Sidebar Toggle ===
   toggle.addEventListener("click", () => {
     sidebar.classList.toggle("close");
   });
+
+  // === Dark Mode Toggle ===
   modeSwitch.addEventListener("click", () => {
     body.classList.toggle("dark");
-  });
 
-  if (body.classList.contains("dark")) {
-    modeText.innerText = "Light Mode"
-  } else {
-    modeText.innerText = "Dark Mode"
-  }
+    if (body.classList.contains("dark")) {
+      modeText.innerText = "Light Mode";
+      localStorage.setItem("theme", "dark"); // simpan pilihan
+    } else {
+      modeText.innerText = "Dark Mode";
+      localStorage.setItem("theme", "light"); // simpan pilihan
+    }
+  });
 </script>

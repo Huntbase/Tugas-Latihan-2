@@ -1,6 +1,42 @@
 @extends('layout.master')
 
 @section('konten')
+<style>
+  .card {
+    background-color: var(--sidebar-color);
+    color: var(--text-color);
+    border: none;
+    transition: var(--trans-03);
+  }
+
+  .table {
+    background-color: var(--sidebar-color);
+    color: var(--text-color);
+  }
+
+  .table thead {
+    background-color: var(--primary-color-light);
+    color: var(--text-color);
+  }
+
+  .alert {
+    background-color: var(--primary-color-light);
+    color: var(--text-color);
+    border: 1px solid var(--primary-color);
+  }
+
+  .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+
+  .btn-info,
+  .btn-warning,
+  .btn-success,
+  .btn-danger {
+    color: #fff;
+  }
+</style>
 <h1 class="mb-4">Daftar Produk Kami</h1>
 
 <a href="/produk/create" class="btn btn-primary mb-3">Tambah Produk</a>
