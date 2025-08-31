@@ -275,38 +275,58 @@
       </li>
       <ul class="menu-links">
         <li class="nav-link">
-          <a href="/dashboard">
+          <a href="{{ route('dashboard') }}">
             <i class="bx bx-grid-alt icon"></i>
             <span class="text nav-text">Dashboard</span>
           </a>
         </li>
+
+        @auth
+        @if(auth()->user()->role === 'admin')
         <li class="nav-link">
-          <a href="/produk">
+          <a href="{{ route('manage-users') }}">
+            <i class="bx bx-user icon"></i>
+            <span class="text nav-text">Manage User & Role</span>
+          </a>
+        </li>
+        @endif
+
+        @if(in_array(auth()->user()->role, ['admin','supervisor']))
+        <li class="nav-link">
+          <a href="{{ route('produk.index') }}">
             <i class="bx bx-box icon"></i>
             <span class="text nav-text">Produk</span>
           </a>
         </li>
         <li class="nav-link">
-          <a href="/produk/create">
-            <i class="bx bx-cart-add icon"></i>
-            <span class="text nav-text">Tambah Produk</span>
-          </a>
-        </li>
-        <li class="nav-link">
-          <a href="/auditLog">
+          <a href="{{ route('audit-log') }}">
             <i class="bx bx-clipboard icon"></i>
             <span class="text nav-text">Audit Log</span>
           </a>
         </li>
+        @endif
+
+        @if(in_array(auth()->user()->role, ['admin','supervisor','staff']))
+        <li class="nav-link">
+          <a href="{{ route('manage-stock') }}">
+            <i class="bx bx-cart icon"></i>
+            <span class="text nav-text">Manage Stok</span>
+          </a>
+        </li>
+        @endif
+        @endauth
       </ul>
     </div>
 
     <div class="bottom-content">
-      <li class="">
-        <a href="">
-          <i class="bx bx-log-out icon"></i>
-          <span class="text nav-text">Logout</span>
-        </a>
+      <li class="logout">
+        <form action="{{ route('logout') }}" method="POST">
+          @csrf
+          <button type="submit" class="w-100 d-flex align-items-center btn text-start" style="background:none; border:none; padding:0;">
+            <i class="bx bx-log-out icon"></i>
+            <span class="text nav-text">Logout</span>
+          </button>
+        </form>
       </li>
       <li class="mode">
         <div class="moon-sun">

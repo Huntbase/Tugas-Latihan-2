@@ -3,26 +3,41 @@
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProdukControllers;
-use App\Models\produk;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/dashboard', [DashboardController::class, 'index']);
+// Login (hanya untuk guest)
+Route::middleware('guest')->group(function () {
+    Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+});
 
-Route::get('/produk', [ProdukControllers::class, 'index']); // read data menampilkan data
+// Logout (hanya untuk user yang login)
+Route::middleware('auth')->post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/produk/create', [ProdukControllers::class, 'create']); // menampilkan halaman form data
-Route::post('/produk', [ProdukControllers::class, 'store']); // untuk mengelola data yang telah dikriim dari halaman form data
+// Semua route setelah login
+Route::middleware('auth')->group(function () {
 
-Route::get('/produk/{id}', [ProdukControllers::class, 'show']); // untuk menampilkan halaman detail data
+    // Dashboard untuk semua role
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/produk/{id}/edit', [ProdukControllers::class, 'edit']);
-Route::put('/produk/{id}', [ProdukControllers::class, 'update']);
+    // Admin only
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/manage-users', function () {
+            return "Halaman Manage User & Role";
+        })->name('manage-users');
+    });
 
-Route::delete('/produk/{id}', [ProdukControllers::class, 'destroy']);
+    // Admin + Supervisor
+    Route::middleware('role:admin,supervisor')->group(function () {
+        Route::resource('produk', ProdukControllers::class);
+        Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log');
+    });
 
-Route::get('/auditLog', [AuditLogController::class, 'index'])->name('auditLog.index');
-
-
-Route::get('/', function () {
-    return view('pages.login');
+    // Admin + Supervisor + Staff
+    Route::middleware('role:admin,supervisor,staff')->group(function () {
+        Route::get('/manage-stock', function () {
+            return "Halaman Manage Stok";
+        })->name('manage-stock');
+    });
 });

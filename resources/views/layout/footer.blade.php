@@ -2,12 +2,14 @@
     .footer {
         background: var(--sidebar-color);
         color: var(--text-color);
+        font-size: 0.9rem;
         transition: var(--trans-03);
     }
 
     .footer a {
         color: var(--text-color);
         text-decoration: none;
+        margin: 0 4px;
     }
 
     .footer a:hover {

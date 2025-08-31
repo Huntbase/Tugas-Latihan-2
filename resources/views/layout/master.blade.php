@@ -65,30 +65,27 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* supaya isi+footer memenuhi ruang */
+    min-height: 100vh;
     margin-left: 250px;
-    /* default lebar sidebar */
-    transition: all 0.3s ease;
+    transition: var(--trans-03);
   }
 
   main {
     flex: 1;
-    /* supaya footer turun ke bawah */
     padding: 20px;
   }
 
   /* Jika sidebar ditutup */
   .sidebar.close~.content-wrapper {
     margin-left: 88px;
-    /* sesuaikan dengan sidebar close */
   }
 </style>
 
 <body>
-
+  {{-- Sidebar / Navbar --}}
   @include('layout.navbar')
 
-  <!-- Wrapper konten + footer -->
+  {{-- Wrapper konten + footer --}}
   <div class="content-wrapper">
 
     <main>
@@ -97,11 +94,12 @@
       </div>
     </main>
 
+    {{-- Footer HARUS di dalam content-wrapper --}}
     @include('layout.footer')
 
   </div>
 
-  <!-- Script -->
+  {{-- Script --}}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   @stack('scripts')
