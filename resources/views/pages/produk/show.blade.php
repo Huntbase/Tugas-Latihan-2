@@ -100,10 +100,14 @@
           <td class="text-center">
             <div class="d-flex justify-content-center gap-2">
               <a href="/produk/{{ $item->barang_id }}/edit" class="btn btn-warning btn-sm">Edit</a>
+              @auth
+              @if(in_array(auth()->user()->role_id, [1,2]))
               <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus{{ $item->barang_id }}">
                 Hapus
               </button>
+              @endif
               <a href="/produk/{{ $item->barang_id }}" class="btn btn-info btn-sm">Detail</a>
+              @endauth
             </div>
           </td>
         </tr>

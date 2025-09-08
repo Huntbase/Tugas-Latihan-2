@@ -3,41 +3,41 @@
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProdukControllers;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
+use App\Http\Middleware\VerifyRoleId;
+use App\Models\produk;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Login (hanya untuk guest)
-Route::middleware('guest')->group(function () {
-    Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
+// Route login
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.process');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Redirect root ke dashboard (user harus login)
+Route::get('/', function () {
+    Auth::logout(); // hapus session login lama
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect()->route('login');
 });
 
-// Logout (hanya untuk user yang login)
-Route::middleware('auth')->post('/logout', [LoginController::class, 'logout'])->name('logout');
+// Dashboard (harus login)
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
 
-// Semua route setelah login
-Route::middleware('auth')->group(function () {
+Route::get('/produk', [ProdukControllers::class, 'index'])->name('produk.index');
+Route::get('/produk/create', [ProdukControllers::class, 'create'])->name('produk.create');
+Route::post('/produk', [ProdukControllers::class, 'store'])->name('produk.store');
+Route::get('/produk/{id}', [ProdukControllers::class, 'show'])->name('produk.show');
+Route::get('/produk/{id}/edit', [ProdukControllers::class, 'edit'])->name('produk.edit');
+Route::put('/produk/{id}', [ProdukControllers::class, 'update'])->name('produk.update');
+Route::delete('/produk/{id}', [ProdukControllers::class, 'destroy'])->name('produk.destroy');
 
-    // Dashboard untuk semua role
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/auditLog', [AuditLogController::class, 'index'])->name('auditLog.index');
 
-    // Admin only
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/manage-users', function () {
-            return "Halaman Manage User & Role";
-        })->name('manage-users');
-    });
-
-    // Admin + Supervisor
-    Route::middleware('role:admin,supervisor')->group(function () {
-        Route::resource('produk', ProdukControllers::class);
-        Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log');
-    });
-
-    // Admin + Supervisor + Staff
-    Route::middleware('role:admin,supervisor,staff')->group(function () {
-        Route::get('/manage-stock', function () {
-            return "Halaman Manage Stok";
-        })->name('manage-stock');
-    });
-});
+Route::resource('Data_users', UserController::class)
+    ->middleware([VerifyRoleId::class . ':1']);
+Route::post('/Data_users/{id}/role', [UserController::class, 'updateRole'])->name('Data_users.updateRole');

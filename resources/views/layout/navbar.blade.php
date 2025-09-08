@@ -282,35 +282,26 @@
         </li>
 
         @auth
-        @if(auth()->user()->role === 'admin')
+        @if(auth()->user()->role_id == 1)
         <li class="nav-link">
-          <a href="{{ route('manage-users') }}">
+          <a href="{{ route('Data_users.index') }}">
             <i class="bx bx-user icon"></i>
             <span class="text nav-text">Manage User & Role</span>
           </a>
         </li>
         @endif
 
-        @if(in_array(auth()->user()->role, ['admin','supervisor']))
         <li class="nav-link">
           <a href="{{ route('produk.index') }}">
             <i class="bx bx-box icon"></i>
             <span class="text nav-text">Produk</span>
           </a>
         </li>
+        @if(in_array(auth()->user()->role_id, [1,2]))
         <li class="nav-link">
-          <a href="{{ route('audit-log') }}">
+          <a href="{{ route('auditLog.index') }}">
             <i class="bx bx-clipboard icon"></i>
             <span class="text nav-text">Audit Log</span>
-          </a>
-        </li>
-        @endif
-
-        @if(in_array(auth()->user()->role, ['admin','supervisor','staff']))
-        <li class="nav-link">
-          <a href="{{ route('manage-stock') }}">
-            <i class="bx bx-cart icon"></i>
-            <span class="text nav-text">Manage Stok</span>
           </a>
         </li>
         @endif

@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasFactory, Notifiable;
 
     protected $table = 'm_users';
     protected $primaryKey = 'user_id';
@@ -17,7 +17,7 @@ class User extends Authenticatable
     protected $fillable = [
         'user_name',
         'password',
-        'role',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -27,5 +27,10 @@ class User extends Authenticatable
     public function getAuthIdentifierName()
     {
         return 'user_name';
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 }

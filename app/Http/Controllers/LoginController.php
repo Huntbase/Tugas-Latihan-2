@@ -22,21 +22,8 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            // Redirect berdasarkan role
-            $role = Auth::user()->role;
-            switch ($role) {
-                case 'admin':
-                    return redirect()->intended('/dashboard');
-                case 'supervisor':
-                    return redirect()->intended('/dashboard');
-                case 'staff':
-                    return redirect()->intended('/stocks');
-                default:
-                    Auth::logout();
-                    return redirect()->route('login')->withErrors('Role tidak dikenali');
-            }
+            $request->session()->regenerate(); // amankan session
+            return redirect()->intended('/dashboard'); // langsung ke dashboard
         }
 
         return back()->withErrors([
