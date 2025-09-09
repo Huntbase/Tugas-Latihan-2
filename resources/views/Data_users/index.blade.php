@@ -3,6 +3,8 @@
 @section('konten')
 <h1 class="mb-4">Daftar User</h1>
 
+<a href="{{ route('Data_users.create') }}" class="btn btn-primary mb-3">Tambah User</a>
+
 @if (session('pesan'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
     {{ session('pesan') }}
@@ -27,7 +29,7 @@
                     aria-label="Cari user"
                     aria-describedby="button-addon2">
                 <button class="btn btn-success" type="submit" id="button-addon2">
-                    Cari Data
+                    Cari User
                 </button>
             </form>
         </div>

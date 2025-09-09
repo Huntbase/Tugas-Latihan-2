@@ -36,7 +36,7 @@ trait Auditable
         }
 
         AuditLogUser::create([
-            'user_id'    => Auth::id(),
+            'user_name'  => Auth::user()?->user_name,
             'action'     => $action,
             'description' => $description,
         ]);

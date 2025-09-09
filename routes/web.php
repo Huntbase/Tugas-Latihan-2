@@ -28,6 +28,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth')
     ->name('dashboard');
 
+// Produk
 Route::get('/produk', [ProdukControllers::class, 'index'])->name('produk.index');
 Route::get('/produk/create', [ProdukControllers::class, 'create'])->name('produk.create');
 Route::post('/produk', [ProdukControllers::class, 'store'])->name('produk.store');
@@ -36,8 +37,14 @@ Route::get('/produk/{id}/edit', [ProdukControllers::class, 'edit'])->name('produ
 Route::put('/produk/{id}', [ProdukControllers::class, 'update'])->name('produk.update');
 Route::delete('/produk/{id}', [ProdukControllers::class, 'destroy'])->name('produk.destroy');
 
+// Audit Log
 Route::get('/auditLog', [AuditLogController::class, 'index'])->name('auditLog.index');
 
+
+// Manage User & Role
 Route::resource('Data_users', UserController::class)
     ->middleware([VerifyRoleId::class . ':1']);
-Route::post('/Data_users/{id}/role', [UserController::class, 'updateRole'])->name('Data_users.updateRole');
+
+Route::post('/Data_users/{id}/role', [UserController::class, 'updateRole'])
+    ->name('Data_users.updateRole')
+    ->middleware([VerifyRoleId::class . ':1']);

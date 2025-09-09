@@ -36,6 +36,29 @@
   .btn-danger {
     color: #fff;
   }
+
+  .btn-custom {
+    color: black !important;
+    /* teks default hitam */
+    font-weight: 500;
+  }
+
+  .btn-custom2 {
+    background-color: #FF2C2C;
+    border-color: #FF2C2C;
+    color: black;
+  }
+
+  .btn-custom2:hover {
+    background-color: #e64a19;
+    border-color: #e64a19;
+    color: white;
+  }
+
+  .btn-custom:hover {
+    color: white !important;
+    /* teks jadi putih saat hover */
+  }
 </style>
 <h1 class="mb-4">Daftar Produk Kami</h1>
 
@@ -99,17 +122,23 @@
           <td>{{ $item->created_at->format('d M Y') }}</td>
           <td class="text-center">
             <div class="d-flex justify-content-center gap-2">
-              <a href="/produk/{{ $item->barang_id }}/edit" class="btn btn-warning btn-sm">Edit</a>
+              <a href="/produk/{{ $item->barang_id }}/edit"
+                class="btn btn-warning btn-sm btn-custom">Edit</a>
               @auth
               @if(in_array(auth()->user()->role_id, [1,2]))
-              <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus{{ $item->barang_id }}">
+              <button type="button"
+                class="btn btn-sm btn-custom2"
+                data-bs-toggle="modal"
+                data-bs-target="#hapus{{ $item->barang_id }}">
                 Hapus
               </button>
               @endif
-              <a href="/produk/{{ $item->barang_id }}" class="btn btn-info btn-sm">Detail</a>
+              <a href="/produk/{{ $item->barang_id }}"
+                class="btn btn-info btn-sm btn-custom">Detail</a>
               @endauth
             </div>
           </td>
+
         </tr>
         @empty
         <tr>

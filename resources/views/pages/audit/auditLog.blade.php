@@ -44,7 +44,7 @@
       <div class="d-flex align-items-center gap-2">
         <img src="{{ $userAvatar }}" alt="avatar" class="rounded-circle" width="40" height="40">
         <div>
-          <strong>{{ $log->user->name ?? 'Guest' }}</strong>
+          <strong>{{ $log->user->user_name ?? 'Guest' }}</strong>
           <span class="{{ $actionClass }}">
             <i class="bi {{ $actionIcon }}"></i> {{ ucfirst($log->action) }}
           </span>

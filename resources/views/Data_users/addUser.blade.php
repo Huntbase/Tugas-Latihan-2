@@ -34,39 +34,40 @@
 <div class="card">
     <div class="card-header fw-semibold">Tambah produk</div>
     <div class="card-body">
-        <form action="/produk" method="POST">
+        <form action="/Data_users" method="POST">
             @csrf
             <div class="row">
                 <div class="row-sm-6">
                     <div class="mb-3">
-                        <label class="form-label">Nama Barang</label>
-                        <input type="text" name="nama_barang" class="form-control" value="{{old('nama_barang')}}">
-                        @error('nama_barang')
-                        <div id="emailHelp" class="form-text text-danger">{{$message}}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="row-sm-6">
-                    <div class="mb-3">
-                        <label class="form-label">Category</label>
-                        <select name="category" class="form-control">
-                            <option value="">-- Pilih Category --</option>
-                            <option value="Makanan" {{ old('category') == 'Makanan' ? 'selected' : '' }}>Makanan</option>
-                            <option value="Minuman" {{ old('category') == 'Minuman' ? 'selected' : '' }}>Minuman</option>
-                            <option value="Elektronik" {{ old('category') == 'Elektronik' ? 'selected' : '' }}>Elektronik</option>
-                            <option value="Alat Rumah Tangga" {{ old('category') == 'Alat Rumah Tangga' ? 'selected' : '' }}>Alat Rumah Tangga</option>
-                        </select>
-                        @error('category')
+                        <label class="form-label">Nama Username</label>
+                        <input type="text" name="user_name" class="form-control" value="{{ old('user_name') }}">
+                        @error('user_name')
                         <div id="emailHelp" class="form-text text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
                 <div class="row-sm-6">
                     <div class="mb-3">
-                        <label class="form-label">Unit</label>
-                        <input type="number" name="unit" class="form-control" value="{{old('unit')}}">
-                        @error('unit')
-                        <div id="emailHelp" class="form-text text-danger">{{$message}}</div>
+                        <label class="form-label">Role</label>
+                        <select name="role_id" class="form-select">
+                            <option value="">-- Pilih Role --</option>
+                            @foreach ($roles as $role)
+                            <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                {{ $role->role_name }}
+                            </option>
+                            @endforeach
+                        </select>
+                        @error('role_id')
+                        <div class="form-text text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row-sm-6">
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" value="{{ old('password') }}">
+                        @error('password')
+                        <div class="form-text text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
