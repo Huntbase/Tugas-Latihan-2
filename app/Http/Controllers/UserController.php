@@ -10,18 +10,25 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('role')->get();
         $roles = Role::all();
-        return view('Data_users.index', compact('users', 'roles'));
+        $search = $request->keyword;
+
+        $users = User::with('role')
+            ->when($search, function ($query, $search) {
+                return $query->where('user_name', 'like', "%{$search}%");
+            })
+            ->get();
+
+        return view('pages.Data_users.index', compact('users', 'roles'));
     }
 
     public function create()
     {
         $roles = Role::all();
 
-        return view('Data_users.addUser', compact('roles'));
+        return view('pages.Data_users.addUser', compact('roles'));
     }
 
     public function show($user_id)
@@ -29,7 +36,7 @@ class UserController extends Controller
         // perintah untuk mengambil data 
         $user = User::findOrFail($user_id);
 
-        return view('Data_users.detail', compact('user'));
+        return view('pages.Data_users.detail', compact('user'));
     }
     public function store(Request $request)
     {

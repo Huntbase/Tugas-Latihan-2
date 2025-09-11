@@ -26,16 +26,25 @@ trait Auditable
     {
         if ($action === 'updated') {
             $changes = $model->getDirty();
-            if (empty($changes)) return; // tidak ada perubahan
-            $description = json_encode($changes);
+            if (empty($changes)) return;
+
+            $before = array_intersect_key($model->getOriginal(), $changes);
+            $after  = $changes;
+
+            $after['user_name'] = $model->user_name ?? null;
+
+            $description = json_encode([
+                'before' => $before,
+                'after'  => $after,
+            ]);
         } elseif ($action === 'deleted') {
-            // Ambil semua atribut sebelum dihapus
             $description = json_encode($model->getOriginal());
         } else {
             $description = json_encode($model->getAttributes());
         }
 
         AuditLogUser::create([
+            'user_id'    => Auth::user()?->user_id,
             'user_name'  => Auth::user()?->user_name,
             'action'     => $action,
             'description' => $description,
