@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produk; // sesuaikan dengan model kamu
+use App\Models\Warehouse;
+use App\Models\WarehouseStock;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        $warehouses = Warehouse::all(); // <<< pastikan ini ada
+
+        $activeWarehouse = session('active_warehouse');
+
         // Total jenis barang
         $totalBarang = Produk::count();
 
@@ -22,6 +28,8 @@ class DashboardController extends Controller
         $stokKosong = Produk::where('unit', 0)->count();
 
         return view('pages.dashboard.dashboard', compact(
+            'warehouses',
+            'activeWarehouse',
             'totalBarang',
             'stokBanyak',
             'stokHampirHabis',

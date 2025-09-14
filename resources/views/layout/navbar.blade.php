@@ -280,6 +280,18 @@
             <span class="text nav-text">Dashboard</span>
           </a>
         </li>
+        <li class="nav-link">
+          <a href="{{ route('warehouse.index') }}">
+            <i class="bx bx-store icon"></i>
+            <span class="text nav-text">Warehouse</span>
+          </a>
+        </li>
+        <li class="nav-link">
+          <a href="{{ route('produk.index') }}">
+            <i class="bx bx-box icon"></i>
+            <span class="text nav-text">Produk</span>
+          </a>
+        </li>
 
         @auth
         @if(auth()->user()->role_id == 1)
@@ -291,12 +303,6 @@
         </li>
         @endif
 
-        <li class="nav-link">
-          <a href="{{ route('produk.index') }}">
-            <i class="bx bx-box icon"></i>
-            <span class="text nav-text">Produk</span>
-          </a>
-        </li>
         @if(in_array(auth()->user()->role_id, [1,2]))
         <li class="nav-link">
           <a href="{{ route('auditLog.index') }}">

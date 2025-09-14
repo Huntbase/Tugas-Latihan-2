@@ -6,9 +6,31 @@
 <p>Selamat datang, <strong>{{ auth()->user()?->user_name ?? 'Guest' }}</strong>!</p>
 <p>Role: <strong>{{ auth()->user()?->role?->role_name ?? '-' }}</strong></p>
 
-@php
-$user = auth()->user();
-@endphp
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form action="{{ route('warehouse.setActive') }}" method="POST">
+                    @csrf
+                    <label for="warehouse_id" class="form-label">Pilih Warehouse</label>
+                    <select name="warehouse_id" id="warehouse_id" class="form-control"
+                        onchange="this.form.submit()">
+                        @foreach($warehouses as $w)
+                        <option value="{{ $w->warehouse_id }}"
+                            {{ session('active_warehouse_id') == $w->warehouse_id ? 'selected' : '' }}>
+                            {{ $w->name_id }}
+                        </option>
+                        @endforeach
+                    </select>
+                </form>
+                <small class="text-muted">
+                    Data saat ini menampilkan gudang:
+                    <strong>{{ $activeWarehouse?->name_id ?? '-' }}</strong>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row g-4">
     <!-- Total Barang -->
@@ -56,16 +78,3 @@ $user = auth()->user();
     </div>
 </div>
 @endsection
-
-@push('styles')
-<style>
-    .hover-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .hover-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-</style>
-@endpush

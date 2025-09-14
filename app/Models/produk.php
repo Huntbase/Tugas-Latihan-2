@@ -22,4 +22,13 @@ class Produk extends Model
 
     // inisialisasi data yang tidak dapat kita isi
     // protected $guarded = [''];
+    public function stocks()
+    {
+        return $this->hasMany(WarehouseStock::class, 'barang_id', 'barang_id');
+    }
+
+    public function movedItems()
+    {
+        return $this->hasMany(BarangDipindah::class, 'barang_id', 'barang_id');
+    }
 }

@@ -43,4 +43,9 @@ class User extends Authenticatable
             3 => 'Supervisor',
         ];
     }
+
+    public function transfers()
+    {
+        return $this->hasMany(Transfer::class, 'user_id', 'user_id');
+    }
 }

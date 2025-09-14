@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProdukControllers;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\WarehouseController;
 use App\Http\Middleware\VerifyRoleId;
 use App\Models\produk;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,17 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth')
     ->name('dashboard');
+
+
+// Warehouse
+Route::get('/select-warehouse', [WarehouseController::class, 'select'])->name('warehouse.select');
+Route::post('/set-warehouse', [WarehouseController::class, 'setActive'])->name('warehouse.setActive');
+Route::get('/warehouse', [WarehouseController::class, 'index'])->name('warehouse.index');
+Route::get('/warehouse/create', [WarehouseController::class, 'create'])->name('warehouse.create');
+Route::resource('warehouses', WarehouseController::class);
+Route::get('/warehouse/dashboard', [WarehouseController::class, 'dashboard'])->name('warehouse.dashboard');
+
+
 
 // Produk
 Route::get('/produk', [ProdukControllers::class, 'index'])->name('produk.index');
