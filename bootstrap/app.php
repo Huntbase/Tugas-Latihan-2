@@ -12,7 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'role_id' => \app\Http\Middleware\VerifyRoleId::class,
+            'role_id' => \App\Http\Middleware\VerifyRoleId::class,
+            'warehouse.selected' => \App\Http\Middleware\EnsureWarehouseSelected::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

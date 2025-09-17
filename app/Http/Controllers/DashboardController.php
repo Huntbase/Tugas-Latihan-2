@@ -2,38 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk; // sesuaikan dengan model kamu
 use App\Models\Warehouse;
 use App\Models\WarehouseStock;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $warehouses = Warehouse::all(); // <<< pastikan ini ada
+        $activeWarehouseId = session('active_warehouse_id');
 
-        $activeWarehouse = session('active_warehouse');
+        // Ambil semua gudang buat dropdown
+        $warehouses = Warehouse::all();
 
-        // Total jenis barang
-        $totalBarang = Produk::count();
+        // Ambil gudang aktif
+        $warehouse = null;
+        if ($activeWarehouseId) {
+            $warehouse = Warehouse::with('stocks.produk')->find($activeWarehouseId);
+        }
 
-        // Barang masih banyak (contoh stok > 50 unit)
-        $stokBanyak = Produk::where('unit', '>', 50)->count();
+        // Hitung statistik stok
+        $totalBarang = $warehouse?->stocks()->count() ?? 0;
+        $stokBanyak = $warehouse?->stocks()->where('stock_quantity', '>', 50)->count() ?? 0;
+        $stokHampirHabis = $warehouse?->stocks()->whereBetween('stock_quantity', [1, 10])->count() ?? 0;
+        $stokKosong = $warehouse?->stocks()->where('stock_quantity', 0)->count() ?? 0;
 
-        // Barang hampir habis (stok antara 1 s/d 10 unit)
-        $stokHampirHabis = Produk::whereBetween('unit', [1, 10])->count();
-
-        // Barang kosong (stok 0)
-        $stokKosong = Produk::where('unit', 0)->count();
-
-        return view('pages.dashboard.dashboard', compact(
+        return view('pages.warehouse.dashboard', compact(
             'warehouses',
-            'activeWarehouse',
+            'warehouse',
             'totalBarang',
             'stokBanyak',
             'stokHampirHabis',
             'stokKosong'
         ));
+    }
+
+    public function setActive(Request $request)
+    {
+        $request->validate([
+            'warehouse_id' => 'required|exists:warehouses,warehouse_id',
+        ]);
+
+        session(['active_warehouse_id' => $request->warehouse_id]);
+
+        return redirect()->route('dashboard.index');
     }
 }

@@ -24,11 +24,12 @@ class WarehouseController extends Controller
             'warehouse_id' => 'required|exists:warehouses,warehouse_id',
         ]);
 
-        // simpan pilihan warehouse di session
+
         session(['active_warehouse_id' => $request->warehouse_id]);
 
-        return redirect()->route('warehouse.dashboard');
+        return redirect()->route('dashboard')->with('success', 'Gudang aktif disimpan.');
     }
+
 
     // Dashboard khusus warehouse aktif
     public function dashboard()
@@ -39,15 +40,63 @@ class WarehouseController extends Controller
             return redirect()->route('warehouse.select')->with('error', 'Silakan pilih warehouse dulu.');
         }
 
-        $warehouse = Warehouse::with('stocks.product')->findOrFail($warehouseId);
+        // ambil warehouse aktif + relasi produk
+        $warehouse = Warehouse::with('stocks.produk')->findOrFail($warehouseId);
 
-        return view('pages.warehouse.dashboard', compact('warehouse'));
+        // Hitung statistik
+        $totalBarang = $warehouse->stocks()->count();
+
+        $stokBanyak = $warehouse->stocks()
+            ->where('stock_quantity', '>', 50)
+            ->count();
+
+        $stokHampirHabis = $warehouse->stocks()
+            ->whereBetween('stock_quantity', [1, 10])
+            ->count();
+
+        $stokKosong = $warehouse->stocks()
+            ->where('stock_quantity', 0)
+            ->count();
+
+        return view('pages.warehouse.dashboard', compact(
+            'warehouse',
+            'totalBarang',
+            'stokBanyak',
+            'stokHampirHabis',
+            'stokKosong'
+        ));
     }
-    public function index(Request $request)
+
+    public function index()
     {
         $warehouses = Warehouse::all();
-        return view('pages.warehouse.index', compact('warehouses'));
+        $activeWarehouseId = session('active_warehouse_id');
+
+        if (!$activeWarehouseId) {
+            return redirect()->route('warehouse.select')
+                ->with('error', 'Silakan pilih warehouse terlebih dahulu.');
+        }
+
+        // ambil warehouse aktif
+        $warehouse = Warehouse::with('stocks.produk')->findOrFail($activeWarehouseId);
+
+        // statistik
+        $totalBarang = $warehouse->stocks->count();
+        $stokBanyak = $warehouse->stocks->where('stock_quantity', '>', 50)->count();
+        $stokHampirHabis = $warehouse->stocks->whereBetween('stock_quantity', [1, 10])->count();
+        $stokKosong = $warehouse->stocks->where('stock_quantity', 0)->count();
+
+        return view('pages.dashboard.dashboard', compact(
+            'warehouses',
+            'warehouse',   // kirim object warehouse aktif
+            'totalBarang',
+            'stokBanyak',
+            'stokHampirHabis',
+            'stokKosong'
+        ));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -88,14 +137,12 @@ class WarehouseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
         // perintah untuk mengambil data 
-        $data = Warehouse::findOrFail($id);
+        $warehouse = Warehouse::with(['stocks.produk'])->findOrFail($id);
 
-        return view('pages.warehouse.detail', [
-            'warehouse' => $data,
-        ]);
+        return view('pages.warehouse.dashboard', compact('warehouse'));
     }
 
     /**

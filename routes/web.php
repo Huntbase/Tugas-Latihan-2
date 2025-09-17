@@ -6,6 +6,7 @@ use App\Http\Controllers\ProdukControllers;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\WarehouseStockController;
 use App\Http\Middleware\VerifyRoleId;
 use App\Models\produk;
 use Illuminate\Support\Facades\Auth;
@@ -17,26 +18,25 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.process');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Redirect root ke dashboard (user harus login)
-Route::get('/', function () {
-    Auth::logout(); // hapus session login lama
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect()->route('login');
-});
+Route::redirect('/', '/login');
+
 
 // Dashboard (harus login)
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware('auth')
-    ->name('dashboard');
+Route::middleware(['auth', 'warehouse.selected'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
+
 
 
 // Warehouse
-Route::get('/select-warehouse', [WarehouseController::class, 'select'])->name('warehouse.select');
-Route::post('/set-warehouse', [WarehouseController::class, 'setActive'])->name('warehouse.setActive');
+Route::get('/warehouse/select', [WarehouseController::class, 'select'])->name('warehouse.select');
+Route::post('/warehouse/set-active', [WarehouseController::class, 'setActive'])->name('warehouse.setActive');
 Route::get('/warehouse', [WarehouseController::class, 'index'])->name('warehouse.index');
 Route::get('/warehouse/create', [WarehouseController::class, 'create'])->name('warehouse.create');
 Route::resource('warehouses', WarehouseController::class);
 Route::get('/warehouse/dashboard', [WarehouseController::class, 'dashboard'])->name('warehouse.dashboard');
+Route::resource('warehouseStocks', WarehouseStockController::class);
+
 
 
 

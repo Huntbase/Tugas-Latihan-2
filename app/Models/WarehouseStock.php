@@ -9,7 +9,7 @@ class WarehouseStock extends Model
 {
     use Auditable;
 
-    protected $table = 'warehouses_stocks';
+    protected $table = 'warehouse_stocks';
     protected $primaryKey = 'ware_stock_id';
     public $incrementing = true;
     protected $keyType = 'int';
@@ -27,7 +27,7 @@ class WarehouseStock extends Model
     }
 
     // Relasi ke produk
-    public function product()
+    public function produk()
     {
         return $this->belongsTo(Produk::class, 'barang_id', 'barang_id');
     }

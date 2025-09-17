@@ -49,8 +49,8 @@
                 @forelse ($warehouses as $warehouse)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $warehouse->name_id }}</td>
-                    <td>{{ $warehouse->location_id }}</td>
+                    <td>{{ $warehouse->name }}</td>
+                    <td>{{ $warehouse->location }}</td>
                     <td>{{ $warehouse->description ?? '-' }}</td>
                     <td>{{ $warehouse->created_at->format('d M Y') }}</td>
                     <td class="text-center">

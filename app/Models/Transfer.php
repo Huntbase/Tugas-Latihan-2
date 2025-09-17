@@ -9,18 +9,25 @@ class Transfer extends Model
 {
     use Auditable;
 
-    protected $table = 'transfers';
-    protected $primaryKey = 'transfers_id';
-    public $incrementing = true;
-    protected $keyType = 'int';
+    protected $primaryKey = 'transfer_id';
 
     protected $fillable = [
         'dari_warehouse_id',
         'ke_warehouse_id',
         'user_id',
         'status',
-        'approved_by',
-        'tanggal_diapproved',
+        'keterangan',
+        'approved_at',
+        'in_transit_at',
+        'completed_at',
+        'rejected_at',
+    ];
+
+    protected $dates = [
+        'approved_at',
+        'in_transit_at',
+        'completed_at',
+        'rejected_at',
     ];
 
     // Relasi ke gudang asal
@@ -38,12 +45,29 @@ class Transfer extends Model
     // Relasi ke user yang request transfer
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    // Relasi ke barang yang dipindahkan
     public function items()
     {
-        return $this->hasMany(BarangDipindah::class, 'transfer_id', 'transfers_id');
+        return $this->hasMany(TransferItem::class, 'transfer_id', 'transfer_id');
+    }
+
+    // ✅ Status helper
+    public function isPending()
+    {
+        return $this->status === 'pending';
+    }
+    public function isApproved()
+    {
+        return $this->status === 'approved';
+    }
+    public function isTransit()
+    {
+        return $this->status === 'in_transit';
+    }
+    public function isCompleted()
+    {
+        return $this->status === 'completed';
     }
 }

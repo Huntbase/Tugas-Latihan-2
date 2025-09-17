@@ -16,20 +16,20 @@ class WarehouseSeeder extends Seeder
     {
         DB::table('warehouses')->insert([
             [
-                'name_id' => 'Ciomas',
-                'location_id' => 'semen',
+                'name' => 'Ciomas',
+                'location' => 'semen',
                 'description' => 'Someting Just Like this',
                 'created_at' => now(),
             ],
             [
-                'name_id' => 'Ciomas 2',
-                'location_id' => 'semen',
+                'name' => 'Ciomas 2',
+                'location' => 'semen',
                 'description' => 'Someting Just Like this',
                 'created_at' => now(),
             ],
             [
-                'name_id' => 'Ciomas 3',
-                'location_id' => 'semen',
+                'name' => 'Ciomas 3',
+                'location' => 'semen',
                 'description' => 'Someting Just Like this',
                 'created_at' => now(),
             ]

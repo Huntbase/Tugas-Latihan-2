@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('warehouses_stocks', function (Blueprint $table) {
+        Schema::create('warehouse_stocks', function (Blueprint $table) {
+
             $table->id('ware_stock_id');
-            $table->foreignId('warehouse_id')->constrained('warehouses', 'warehouse_id')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('barang_id')->constrained('produk', 'barang_id')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('warehouse_id');
+            $table->unsignedBigInteger('barang_id');
             $table->integer('stock_quantity')->default(0);
             $table->timestamps();
+
+            $table->unique(['warehouse_id', 'barang_id']); // prevent duplicate
         });
     }
 
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('warehouses_stocks');
+        Schema::dropIfExists('warehouse_stocks');
     }
 };
