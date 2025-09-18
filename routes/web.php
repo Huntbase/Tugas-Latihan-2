@@ -35,6 +35,8 @@ Route::get('/warehouse', [WarehouseController::class, 'index'])->name('warehouse
 Route::get('/warehouse/create', [WarehouseController::class, 'create'])->name('warehouse.create');
 Route::resource('warehouses', WarehouseController::class);
 Route::get('/warehouse/dashboard', [WarehouseController::class, 'dashboard'])->name('warehouse.dashboard');
+
+// WarehouseStock
 Route::resource('warehouseStocks', WarehouseStockController::class);
 
 

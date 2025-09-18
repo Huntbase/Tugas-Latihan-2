@@ -37,28 +37,24 @@ class WarehouseController extends Controller
         $warehouseId = session('active_warehouse_id');
 
         if (!$warehouseId) {
-            return redirect()->route('warehouse.select')->with('error', 'Silakan pilih warehouse dulu.');
+            return redirect()->route('warehouse.select')
+                ->with('error', 'Silakan pilih warehouse dulu.');
         }
 
-        // ambil warehouse aktif + relasi produk
+        // Semua gudang buat dropdown
+        $warehouses = Warehouse::all();
+
+        // Ambil warehouse aktif + relasi produk
         $warehouse = Warehouse::with('stocks.produk')->findOrFail($warehouseId);
 
         // Hitung statistik
         $totalBarang = $warehouse->stocks()->count();
-
-        $stokBanyak = $warehouse->stocks()
-            ->where('stock_quantity', '>', 50)
-            ->count();
-
-        $stokHampirHabis = $warehouse->stocks()
-            ->whereBetween('stock_quantity', [1, 10])
-            ->count();
-
-        $stokKosong = $warehouse->stocks()
-            ->where('stock_quantity', 0)
-            ->count();
+        $stokBanyak = $warehouse->stocks()->where('stock_quantity', '>', 50)->count();
+        $stokHampirHabis = $warehouse->stocks()->whereBetween('stock_quantity', [1, 10])->count();
+        $stokKosong = $warehouse->stocks()->where('stock_quantity', 0)->count();
 
         return view('pages.warehouse.dashboard', compact(
+            'warehouses',
             'warehouse',
             'totalBarang',
             'stokBanyak',
@@ -67,36 +63,19 @@ class WarehouseController extends Controller
         ));
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $warehouses = Warehouse::all();
-        $activeWarehouseId = session('active_warehouse_id');
+        $search = $request->keyword;
 
-        if (!$activeWarehouseId) {
-            return redirect()->route('warehouse.select')
-                ->with('error', 'Silakan pilih warehouse terlebih dahulu.');
-        }
+        $warehouses = Warehouse::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%")
+                ->orWhere('location', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        })
+            ->paginate(10);
 
-        // ambil warehouse aktif
-        $warehouse = Warehouse::with('stocks.produk')->findOrFail($activeWarehouseId);
-
-        // statistik
-        $totalBarang = $warehouse->stocks->count();
-        $stokBanyak = $warehouse->stocks->where('stock_quantity', '>', 50)->count();
-        $stokHampirHabis = $warehouse->stocks->whereBetween('stock_quantity', [1, 10])->count();
-        $stokKosong = $warehouse->stocks->where('stock_quantity', 0)->count();
-
-        return view('pages.dashboard.dashboard', compact(
-            'warehouses',
-            'warehouse',   // kirim object warehouse aktif
-            'totalBarang',
-            'stokBanyak',
-            'stokHampirHabis',
-            'stokKosong'
-        ));
+        return view('pages.warehouse.index', compact('warehouses'));
     }
-
-
 
     /**
      * Show the form for creating a new resource.

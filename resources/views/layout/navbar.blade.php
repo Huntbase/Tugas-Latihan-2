@@ -289,7 +289,7 @@
         <li class="nav-link">
           <a href="{{ route('produk.index') }}">
             <i class="bx bx-box icon"></i>
-            <span class="text nav-text">Produk</span>
+            <span class="text nav-text">Daftar Produk</span>
           </a>
         </li>
 

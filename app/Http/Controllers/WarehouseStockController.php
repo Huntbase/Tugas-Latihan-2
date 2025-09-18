@@ -11,7 +11,7 @@ class WarehouseStockController extends Controller
     // Tampilkan daftar stok gudang aktif
     public function index()
     {
-        $warehouseId = session('active_warehouse');
+        $warehouseId = session('active_warehouse_id');
 
         if (!$warehouseId) {
             return redirect()->route('warehouse.select')->with('error', 'Silakan pilih gudang terlebih dahulu.');

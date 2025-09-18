@@ -10,11 +10,6 @@ class ProdukControllers extends Controller
 {
     public function index(Request $request)
     {
-        $data_toko = [
-            'nama_toko' => 'Bibong Jaya Abadi',
-            'alamat' => 'bibung jakarta kota',
-            'type' => 'Ruko'
-        ];
 
         $search = $request->keyword;
 
@@ -22,7 +17,6 @@ class ProdukControllers extends Controller
             return $query->where('nama_barang', 'like', "%{$search}%");
         })->get();
         return view('pages.produk.show', [
-            'data_toko' => $data_toko,
             'data_produk' => $data
         ]);
     }

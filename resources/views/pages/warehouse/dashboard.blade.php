@@ -1,6 +1,71 @@
 @extends('layout.master')
 
 @section('konten')
+<style>
+    .card {
+        background-color: var(--sidebar-color);
+        color: var(--text-color);
+        border: none;
+        transition: var(--trans-03);
+    }
+
+    .table {
+        background-color: var(--sidebar-color);
+        color: var(--text-color);
+    }
+
+    .modal-content {
+        background-color: #fff !important;
+        color: #000 !important;
+        border: 1px solid var(--primary-color-light);
+    }
+
+    .table thead {
+        background-color: var(--primary-color-light);
+        color: var(--text-color);
+    }
+
+    .alert {
+        background-color: var(--primary-color-light);
+        color: var(--text-color);
+        border: 1px solid var(--primary-color);
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-info,
+    .btn-warning,
+    .btn-success,
+    .btn-danger {
+        color: #fff;
+    }
+
+    .btn-custom {
+        color: black !important;
+        /* teks default hitam */
+        font-weight: 500;
+    }
+
+    .btn-custom2 {
+        background-color: #FF2C2C;
+        border-color: #FF2C2C;
+        color: black;
+    }
+
+    .btn-custom2:hover {
+        background-color: #e64a19;
+        border-color: #e64a19;
+        color: white;
+    }
+
+    .btn-custom:hover {
+        color: white !important;
+        /* teks jadi putih saat hover */
+    }
+</style>
 <h1 class="mb-4">Dashboard Warehouse</h1>
 
 <form action="{{ route('warehouse.setActive') }}" method="POST" class="mb-4">
@@ -78,11 +143,12 @@
 <div class="card shadow-sm">
     <div class="card-body">
         <table class="table table-bordered table-striped align-middle mb-0">
-            <thead class="table-light">
+            <thead>
                 <tr>
                     <th>No</th>
                     <th>Nama Barang</th>
                     <th class="text-center">Stok</th>
+                    <th class="text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,10 +157,26 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $stock->produk->nama_barang ?? '-' }}</td>
                     <td class="text-center">{{ $stock->stock_quantity }}</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="{{ route('warehouseStocks.edit', $stock->id) }}"
+                                class="btn btn-warning btn-sm btn-custom">Edit</a>
+
+                            <button type="button"
+                                class="btn btn-sm btn-custom2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#hapus{{ $stock->id }}">
+                                Hapus
+                            </button>
+
+                            <a href="{{ route('warehouseStocks.show', $stock->id) }}"
+                                class="btn btn-info btn-sm btn-custom">Detail</a>
+                        </div>
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="3" class="text-center text-muted">
+                    <td colspan="4" class="text-center text-muted">
                         Belum ada stok barang di gudang ini
                     </td>
                 </tr>
@@ -103,4 +185,20 @@
         </table>
     </div>
 </div>
+
+<!-- Modal -->
+@foreach ($warehouse->stocks as $stock)
+<form action="{{ route('warehouseStocks.destroy', $stock->id) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <div class="modal-body">
+        Apakah Anda yakin ingin menghapus stok
+        <strong>{{ $stock->produk->nama_barang }}</strong>?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-danger">Hapus Data</button>
+    </div>
+</form>
+@endforeach
 @endsection
