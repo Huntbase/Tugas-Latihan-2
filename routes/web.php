@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseStockController;
+use App\Http\Controllers\StockTransferController;
 use App\Http\Middleware\VerifyRoleId;
 use App\Models\produk;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,6 @@ Route::middleware(['auth', 'warehouse.selected'])->group(function () {
 });
 
 
-
 // Warehouse
 Route::get('/warehouse/select', [WarehouseController::class, 'select'])->name('warehouse.select');
 Route::post('/warehouse/set-active', [WarehouseController::class, 'setActive'])->name('warehouse.setActive');
@@ -39,8 +39,13 @@ Route::get('/warehouse/dashboard', [WarehouseController::class, 'dashboard'])->n
 // WarehouseStock
 Route::resource('warehouseStocks', WarehouseStockController::class);
 
-
-
+//Stock Transfer
+Route::get('/stock-transfers', [StockTransferController::class, 'index'])->name('stock-transfers.index');
+Route::get('/stock-transfers/create', [StockTransferController::class, 'create'])->name('stock-transfers.create');
+Route::post('/stock-transfers', [StockTransferController::class, 'store'])->name('stock-transfers.store');
+Route::post('/stock-transfers/{stockTransfer}/approve', [StockTransferController::class, 'approve'])->name('stock-transfers.approve');
+Route::post('/stock-transfers/{stockTransfer}/reject', [StockTransferController::class, 'reject'])->name('stock-transfers.reject');
+Route::post('/stock-transfers/{stockTransfer}/cancel', [StockTransferController::class, 'cancel'])->name('stock-transfers.cancel');
 
 // Produk
 Route::get('/produk', [ProdukControllers::class, 'index'])->name('produk.index');

@@ -25,11 +25,6 @@ class User extends Authenticatable
         'password',
     ];
 
-    public function getAuthIdentifierName()
-    {
-        return 'user_name';
-    }
-
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id', 'id');

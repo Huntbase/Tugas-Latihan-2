@@ -14,7 +14,7 @@ class Warehouse extends Model
     public $incrementing = true;
     protected $keyType = 'int';
 
-    protected $fillable = ['name_id', 'location_id', 'description'];
+    protected $fillable = ['name', 'location', 'description'];
 
     // Relasi ke stok barang di gudang
     public function stocks()

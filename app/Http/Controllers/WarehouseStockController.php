@@ -21,26 +21,26 @@ class WarehouseStockController extends Controller
             ->where('warehouse_id', $warehouseId)
             ->get();
 
-        return view('pages.warehouse_stocks.index', compact('stocks'));
+        return view('pages.Warehouse_stocks.index', compact('stocks'));
     }
 
     // Form tambah stok
     public function create()
     {
-        $warehouseId = session('active_warehouse');
+        $warehouseId = session('active_warehouse_id');
         if (!$warehouseId) {
             return redirect()->route('warehouse.select')->with('error', 'Pilih gudang dulu.');
         }
 
         $produks = Produk::all();
 
-        return view('pages.warehouse_stocks.create', compact('produks'));
+        return view('pages.Warehouse_stocks.create', compact('produks'));
     }
 
     // Simpan stok baru
     public function store(Request $request)
     {
-        $warehouseId = session('active_warehouse');
+        $warehouseId = session('active_warehouse_id');
         if (!$warehouseId) {
             return redirect()->route('warehouse.select')->with('error', 'Pilih gudang dulu.');
         }
@@ -63,7 +63,7 @@ class WarehouseStockController extends Controller
     public function edit($id)
     {
         $stock = WarehouseStock::findOrFail($id);
-        return view('pages.warehouse_stocks.edit', compact('stock'));
+        return view('pages.Warehouse_stocks.edit', compact('stock'));
     }
 
     // Update stok
