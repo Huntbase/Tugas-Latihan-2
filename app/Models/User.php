@@ -34,13 +34,30 @@ class User extends Authenticatable
     {
         return [
             1 => 'Admin',
-            2 => 'Staff',
-            3 => 'Supervisor',
+            2 => 'Supervisor',
+            3 => 'Staff',
         ];
     }
 
     public function transfers()
     {
         return $this->hasMany(Transfer::class, 'user_id', 'user_id');
+    }
+
+    public function warehouseAssignments()
+    {
+        return $this->hasMany(UserWarehouseAssignment::class, 'user_id', 'user_id');
+    }
+
+    public function warehouses()
+    {
+        return $this->belongsToMany(
+            Warehouse::class,
+            'user_warehouse_assignments',
+            'user_id',
+            'warehouse_id',
+            'user_id',
+            'warehouse_id'
+        );
     }
 }

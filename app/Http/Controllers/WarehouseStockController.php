@@ -5,9 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\WarehouseStock;
 use App\Models\Produk;
+use Illuminate\Support\Facades\Auth;
 
 class WarehouseStockController extends Controller
 {
+    /**
+     * Pastikan stok yang mau diedit/dihapus memang milik gudang yang
+     * berhak diakses user ini. Mencegah Supervisor/Staff mengubah stok
+     * gudang lain lewat tebak-tebakan ID di URL.
+     */
+    private function assertOwnsStock(WarehouseStock $stock): void
+    {
+        $user = Auth::user();
+
+        if ($user->role_id === 1) {
+            return; // Admin bebas akses
+        }
+
+        $allowed = $user->warehouseAssignments()->pluck('warehouse_id')->toArray();
+
+        abort_unless(in_array($stock->warehouse_id, $allowed), 403, 'Anda tidak memiliki akses ke stok warehouse ini.');
+    }
+
     // Tampilkan daftar stok gudang aktif
     public function index()
     {
@@ -63,19 +82,23 @@ class WarehouseStockController extends Controller
     public function edit($id)
     {
         $stock = WarehouseStock::findOrFail($id);
+        $this->assertOwnsStock($stock);
+
         return view('pages.Warehouse_stocks.edit', compact('stock'));
     }
 
     // Update stok
     public function update(Request $request, $id)
     {
+        $stock = WarehouseStock::findOrFail($id);
+        $this->assertOwnsStock($stock);
+
         $request->validate([
-            'stock_quantity' => 'required|integer|min:0', // ganti jumlah -> stock_quantity
+            'stock_quantity' => 'required|integer|min:0',
         ]);
 
-        $stock = WarehouseStock::findOrFail($id);
         $stock->update([
-            'stock_quantity' => $request->stock_quantity, // ganti jumlah -> stock_quantity
+            'stock_quantity' => $request->stock_quantity,
         ]);
 
         return redirect()->route('warehouseStocks.index')->with('success', 'Stok berhasil diperbarui.');
@@ -85,6 +108,8 @@ class WarehouseStockController extends Controller
     public function destroy($id)
     {
         $stock = WarehouseStock::findOrFail($id);
+        $this->assertOwnsStock($stock);
+
         $stock->delete();
 
         return redirect()->route('warehouseStocks.index')->with('success', 'Stok berhasil dihapus.');

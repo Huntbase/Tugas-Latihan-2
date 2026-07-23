@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\StockTransfer;
+use App\Policies\StockTransferPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,4 +23,9 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
+    protected $policies = [
+        StockTransfer::class => StockTransferPolicy::class,
+        // ...policy lain yang sudah ada, biarkan tetap di situ
+    ];
 }

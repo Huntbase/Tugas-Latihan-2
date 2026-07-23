@@ -42,6 +42,7 @@
                     <th>No</th>
                     <th>Nama</th>
                     <th>Role</th>
+                    <th>Warehouse</th>
                     <th>Dibuat</th>
                     <th>Aksi</th>
                 </tr>
@@ -52,13 +53,21 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $user->user_name }}</td>
                     <td>{{ $user->role?->role_name ?? 'Belum ada role' }}</td>
+                    <td>
+                        @if ($user->role_id === 1)
+                        <span class="badge bg-primary">Semua Warehouse</span>
+                        @elseif ($user->warehouses->isNotEmpty())
+                        @foreach ($user->warehouses as $w)
+                        <span class="badge bg-secondary">{{ $w->name }}</span>
+                        @endforeach
+                        @else
+                        <span class="text-muted small">Belum ditugaskan</span>
+                        @endif
+                    </td>
                     <td>{{ $user->created_at->format('d M Y') }}</td>
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">
                             <a href="{{ route('Data_users.edit', $user->user_id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#gantiRole{{ $user->user_id }}">
-                                Ganti Role
-                            </button>
                             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus{{ $user->user_id }}">
                                 Hapus
                             </button>
@@ -68,7 +77,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center">Data user tidak ditemukan!</td>
+                    <td colspan="6" class="text-center">Data user tidak ditemukan!</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -93,36 +102,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                 <button type="submit" class="btn btn-danger">Hapus Data</button>
-            </div>
-        </form>
-    </div>
-</div>
-@endforeach
-@foreach ($users as $user)
-<div class="modal fade" id="gantiRole{{ $user->user_id }}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <form action="{{ route('Data_users.updateRole', $user->user_id) }}" method="POST" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Ganti Role</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                @csrf
-                <input type="hidden" name="user_id" value="{{ $user->user_id }}">
-                <div class="mb-3">
-                    <label for="role{{ $user->user_id }}" class="form-label">Pilih Role Baru</label>
-                    <select name="role_id" id="role{{ $user->user_id }}" class="form-select" required>
-                        @foreach ($roles as $role)
-                        <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>
-                            {{ $role->role_name }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-success">Simpan</button>
             </div>
         </form>
     </div>

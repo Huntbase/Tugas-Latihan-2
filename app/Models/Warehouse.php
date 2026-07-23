@@ -33,4 +33,16 @@ class Warehouse extends Model
     {
         return $this->hasMany(Transfer::class, 'ke_warehouse_id', 'warehouse_id');
     }
+
+    public function assignedUsers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_warehouse_assignments',
+            'warehouse_id',
+            'user_id',
+            'warehouse_id',
+            'user_id'
+        );
+    }
 }
