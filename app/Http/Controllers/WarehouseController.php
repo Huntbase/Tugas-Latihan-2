@@ -61,7 +61,19 @@ class WarehouseController extends Controller
 
         session(['active_warehouse_id' => $request->warehouse_id]);
 
-        return redirect()->route('dashboard')->with('success', 'Gudang aktif disimpan.');
+        // Balik ke halaman yang minta (dikirim lewat hidden field
+        // redirect_to), supaya switcher di halaman manapun tetap di
+        // halaman itu juga - bukan selalu lompat ke satu tempat tetap.
+        // Dibatasi ke daftar route yang diizinkan supaya aman dari
+        // manipulasi nama route sembarangan.
+        $allowedRedirects = ['warehouse.dashboard', 'warehouseStocks.index'];
+        $redirectTo = $request->input('redirect_to', 'warehouse.dashboard');
+
+        if (!in_array($redirectTo, $allowedRedirects)) {
+            $redirectTo = 'warehouse.dashboard';
+        }
+
+        return redirect()->route($redirectTo)->with('success', 'Gudang aktif disimpan.');
     }
 
     // Dashboard khusus warehouse aktif
@@ -97,7 +109,7 @@ class WarehouseController extends Controller
         $stokHampirHabis = $warehouse->stocks()->whereBetween('stock_quantity', [1, 10])->count();
         $stokKosong = $warehouse->stocks()->where('stock_quantity', 0)->count();
 
-        return view('pages.warehouse.dashboard', compact(
+        return view('pages.warehouse.warehouse', compact(
             'warehouses',
             'warehouse',
             'totalBarang',
@@ -140,18 +152,18 @@ class WarehouseController extends Controller
         abort_unless(Auth::user()->role_id === 1, 403);
 
         $request->validate([
-            'name_id' => 'required',
-            'location_id' => 'required',
+            'name' => 'required',
+            'location' => 'required',
             'description' => 'nullable|string',
         ], [
-            'name_id.required' => 'Nama Gudang wajib diisi!',
-            'location_id.required' => 'Lokasi wajib diisi!',
+            'name.required' => 'Nama Gudang wajib diisi!',
+            'location.required' => 'Lokasi wajib diisi!',
             'description.required' => 'Deskripsi wajib diisi!',
         ]);
 
         Warehouse::create([
-            'name_id'     => $request->name_id,
-            'location_id' => $request->location_id,
+            'name'     => $request->name,
+            'location' => $request->location,
             'description' => $request->description,
         ]);
 
@@ -162,9 +174,29 @@ class WarehouseController extends Controller
     {
         $this->assertCanAccessWarehouse((int) $id);
 
+        $allowed = $this->accessibleWarehouseIds();
+
+        // Dropdown switcher - sama seperti di dashboard()
+        $warehouses = Warehouse::when($allowed !== null, function ($query) use ($allowed) {
+            $query->whereIn('warehouse_id', $allowed);
+        })
+            ->get();
+
         $warehouse = Warehouse::with(['stocks.produk'])->findOrFail($id);
 
-        return view('pages.warehouse.dashboard', compact('warehouse'));
+        $totalBarang = $warehouse->stocks()->count();
+        $stokBanyak = $warehouse->stocks()->where('stock_quantity', '>', 50)->count();
+        $stokHampirHabis = $warehouse->stocks()->whereBetween('stock_quantity', [1, 10])->count();
+        $stokKosong = $warehouse->stocks()->where('stock_quantity', 0)->count();
+
+        return view('pages.warehouse.warehouse', compact(
+            'warehouses',
+            'warehouse',
+            'totalBarang',
+            'stokBanyak',
+            'stokHampirHabis',
+            'stokKosong'
+        ));
     }
 
     public function edit(string $id)
@@ -184,19 +216,19 @@ class WarehouseController extends Controller
         abort_unless(Auth::user()->role_id === 1, 403);
 
         $request->validate([
-            'name_id' => 'required',
-            'location_id' => 'required',
+            'name' => 'required',
+            'location' => 'required',
             'description' => 'nullable|string',
         ], [
-            'name_id.required' => 'Nama Gudang wajib diisi!',
-            'location_id.required' => 'Lokasi wajib diisi!',
+            'name.required' => 'Nama Gudang wajib diisi!',
+            'location.required' => 'Lokasi wajib diisi!',
             'description.required' => 'Deskripsi wajib diisi!',
         ]);
 
         $warehouse = Warehouse::findOrFail($id);
 
-        $warehouse->name_id       = $request->name_id;
-        $warehouse->location_id   = $request->location_id;
+        $warehouse->name       = $request->name;
+        $warehouse->location   = $request->location;
         $warehouse->description   = $request->description;
         $warehouse->save();
 

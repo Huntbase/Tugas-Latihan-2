@@ -2,93 +2,51 @@
 
 @section('konten')
 <style>
-  .card {
-    background-color: var(--sidebar-color);
-    color: var(--text-color);
-    border: none;
-    transition: var(--trans-03);
-  }
-
-  .table {
-    background-color: var(--sidebar-color);
-    color: var(--text-color);
-  }
-
-  .table thead {
-    background-color: var(--primary-color-light);
-    color: var(--text-color);
-  }
-
-  .alert {
-    background-color: var(--primary-color-light);
-    color: var(--text-color);
-    border: 1px solid var(--primary-color);
-  }
-
-  .btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-  }
-
-  .btn-info,
-  .btn-warning,
-  .btn-success,
-  .btn-danger {
+  .category-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
     color: #fff;
   }
-
-  .btn-custom {
-    color: black !important;
-    /* teks default hitam */
-    font-weight: 500;
-  }
-
-  .btn-custom2 {
-    background-color: #FF2C2C;
-    border-color: #FF2C2C;
-    color: black;
-  }
-
-  .btn-custom2:hover {
-    background-color: #e64a19;
-    border-color: #e64a19;
-    color: white;
-  }
-
-  .btn-custom:hover {
-    color: white !important;
-    /* teks jadi putih saat hover */
-  }
 </style>
-<h1 class="mb-4">Daftar Produk Kami</h1>
 
-<a href="/produk/create" class="btn btn-primary mb-3">Tambah Produk</a>
+<h1 class="mb-4">Daftar Produk</h1>
 
+@if(auth()->user()->role_id !== 3)
+<a href="{{ route('produk.create') }}" class="btn btn-primary mb-3">Tambah Produk</a>
+@endif
 
 @if (session('pesan'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
   {{ session('pesan') }}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 @endif
 
 <div class="card">
-  <div class="card-header d-flex justify-content-between align-items-center">
+  <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
     <h5 class="mb-0">Daftar Produk</h5>
     <div class="d-flex gap-2">
-      @if (Request()->keyword != '')
-      <a href="/produk" class="btn btn-info">Reset</a>
+      @if (request('keyword') || request('category'))
+      <a href="{{ route('produk.index') }}" class="btn btn-info">Reset</a>
       @endif
-      <form class="input-group" style="width: 350px;">
+      <form class="d-flex gap-2" method="GET">
+        <select name="category" class="form-select" style="width: 180px;" onchange="this.form.submit()">
+          <option value="">Semua Kategori</option>
+          @foreach ($categories as $cat)
+          <option value="{{ $cat }}" @selected(request('category')==$cat)>{{ $cat }}</option>
+          @endforeach
+        </select>
         <input
           type="text"
           class="form-control"
-          value="{{ Request()->keyword }}"
+          style="width: 220px;"
+          value="{{ request('keyword') }}"
           placeholder="Cari produk"
-          name="keyword"
-          aria-label="Cari produk"
-          aria-describedby="button-addon2">
-        <button class="btn btn-success" type="submit" id="button-addon2">
+          name="keyword">
+        <button class="btn btn-success" type="submit">
           Cari Data
         </button>
       </form>
@@ -96,76 +54,53 @@
   </div>
 
   <div class="card-body">
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered align-middle">
       <thead>
         <tr>
           <th>No</th>
           <th>Nama Produk</th>
           <th>Kategori</th>
-          <!-- <th>Unit</th> -->
+          <th>Unit</th>
           <th>Dibuat</th>
           <th>Aksi</th>
         </tr>
       </thead>
       <tbody>
-        @forelse ($data_produk as $item)
+        @forelse ($data_produk as $produk)
         <tr>
-          <td>{{ $loop->iteration }}</td>
-          <td>{{ $item->nama_barang }}</td>
-          <td>{{ $item->category }}</td>
-          <!-- <td>{{ $item->unit }}</td> -->
-          <td>{{ $item->created_at->format('d M Y') }}</td>
+          <td>{{ $loop->iteration + ($data_produk->currentPage() - 1) * $data_produk->perPage() }}</td>
+          <td>{{ $produk->nama_barang }}</td>
+          <td>
+            @php
+            // Warna badge dibuat konsisten per kategori berdasarkan hash nama kategori,
+            // jadi kategori yang sama selalu dapat warna yang sama tanpa perlu mapping manual
+            $colors = ['#0d6efd', '#198754', '#fd7e14', '#6f42c1', '#d63384', '#20c997', '#dc3545'];
+            $colorIndex = crc32($produk->category) % count($colors);
+            @endphp
+            <span class="category-badge" style="background-color: {{ $colors[$colorIndex] }}">
+              {{ $produk->category }}
+            </span>
+          </td>
+          <td>{{ $produk->unit }}</td>
+          <td>{{ $produk->created_at->format('d M Y') }}</td>
           <td class="text-center">
             <div class="d-flex justify-content-center gap-2">
-              <a href="/produk/{{ $item->barang_id }}/edit"
-                class="btn btn-warning btn-sm btn-custom">Edit</a>
-              @auth
-              @if(in_array(auth()->user()->role_id, [1,2]))
-              <button type="button"
-                class="btn btn-sm btn-custom2"
-                data-bs-toggle="modal"
-                data-bs-target="#hapus{{ $item->barang_id }}">
-                Hapus
-              </button>
+              @if(auth()->user()->role_id !== 3)
+              <a href="{{ route('produk.edit', $produk->barang_id) }}" class="btn btn-warning btn-sm">Edit</a>
               @endif
-              <a href="/produk/{{ $item->barang_id }}"
-                class="btn btn-info btn-sm btn-custom">Detail</a>
-              @endauth
+              <a href="{{ route('produk.show', $produk->barang_id) }}" class="btn btn-info btn-sm">Detail</a>
             </div>
           </td>
-
         </tr>
         @empty
         <tr>
-          <td colspan="6" class="text-center">Data yang anda cari tidak ada!</td>
+          <td colspan="6" class="text-center">Data produk tidak ditemukan!</td>
         </tr>
         @endforelse
       </tbody>
     </table>
+
+    {{ $data_produk->withQueryString()->links() }}
   </div>
 </div>
-
-<!-- Modal -->
-@foreach ($data_produk as $item)
-<div class="modal fade" id="hapus{{ $item->barang_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form action="/produk/{{ $item->barang_id }}" method="POST" class="modal-content">
-      @csrf
-      @method('DELETE')
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Apakah Anda yakin ingin menghapus <strong>{{ $item->nama_barang }}</strong>?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-        <button type="submit" class="btn btn-danger">Hapus Data</button>
-      </div>
-    </form>
-  </div>
-</div>
-@endforeach
-
 @endsection

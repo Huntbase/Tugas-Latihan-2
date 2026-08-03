@@ -70,6 +70,7 @@
 
 <form action="{{ route('warehouse.setActive') }}" method="POST" class="mb-4">
     @csrf
+    <input type="hidden" name="redirect_to" value="warehouse.dashboard">
     <div class="mb-3">
         <label for="warehouse_id" class="form-label">Pilih Gudang</label>
         <select name="warehouse_id" id="warehouse_id" class="form-select" onchange="this.form.submit()">

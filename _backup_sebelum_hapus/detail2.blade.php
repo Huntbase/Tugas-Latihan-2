@@ -22,7 +22,7 @@
         transition: var(--trans-03);
     }
 </style>
-<h1 class="mb-4">Detail Produk</h1>
+<h1 class="mb-4">Detail Produk Kami</h1>
 
 <div class="card mb-4 shadow-sm">
     <div class="row g-0">

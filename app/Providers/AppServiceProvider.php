@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use App\Models\StockTransfer;
 use App\Policies\StockTransferPolicy;
 
@@ -21,11 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::policy(StockTransfer::class, StockTransferPolicy::class);
     }
-
-    protected $policies = [
-        StockTransfer::class => StockTransferPolicy::class,
-        // ...policy lain yang sudah ada, biarkan tetap di situ
-    ];
 }

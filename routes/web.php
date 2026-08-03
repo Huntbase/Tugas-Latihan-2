@@ -33,9 +33,8 @@ Route::redirect('/', '/login');
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard (tetap butuh warehouse.selected juga)
-    Route::middleware(['warehouse.selected'])->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    });
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
     // Warehouse
     Route::get('/warehouse/select', [WarehouseController::class, 'select'])->name('warehouse.select');
@@ -46,8 +45,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/warehouse/dashboard', [WarehouseController::class, 'dashboard'])->name('warehouse.dashboard');
 
     // WarehouseStock
-    Route::resource('warehouseStocks', WarehouseStockController::class);
-
+    Route::middleware(['warehouse.selected'])->group(function () {
+        Route::resource('warehouseStocks', WarehouseStockController::class);
+    });
     // Stock Transfer
     Route::get('/stock-transfers', [StockTransferController::class, 'index'])->name('stock-transfers.index');
     Route::get('/stock-transfers/create', [StockTransferController::class, 'create'])->name('stock-transfers.create');

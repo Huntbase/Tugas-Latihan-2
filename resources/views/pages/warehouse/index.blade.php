@@ -3,7 +3,9 @@
 @section('konten')
 <h1 class="mb-4">Warehouse</h1>
 
+@if(auth()->user()->role_id === 1)
 <a href="{{ route('warehouse.create') }}" class="btn btn-primary mb-3">Tambah Warehouse</a>
+@endif
 
 @if (session('pesan'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -55,10 +57,12 @@
                     <td>{{ $warehouse->created_at->format('d M Y') }}</td>
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">
+                            @if(auth()->user()->role_id === 1)
                             <a href="{{ route('warehouses.edit', $warehouse->warehouse_id) }}" class="btn btn-warning btn-sm">Edit</a>
                             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus{{ $warehouse->warehouse_id }}">
                                 Hapus
                             </button>
+                            @endif
                             <a href="{{ route('warehouses.show', $warehouse->warehouse_id) }}" class="btn btn-info btn-sm">Detail</a>
                         </div>
                     </td>
@@ -73,6 +77,7 @@
     </div>
 </div>
 
+@if(auth()->user()->role_id === 1)
 <!-- Modal Konfirmasi Hapus -->
 @foreach ($warehouses as $warehouse)
 <div class="modal fade" id="hapus{{ $warehouse->warehouse_id }}" tabindex="-1">
@@ -85,7 +90,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                Apakah Anda yakin ingin menghapus <strong>{{ $warehouse->name_id }}</strong>?
+                Apakah Anda yakin ingin menghapus <strong>{{ $warehouse->name }}</strong>?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -95,4 +100,5 @@
     </div>
 </div>
 @endforeach
+@endif
 @endsection

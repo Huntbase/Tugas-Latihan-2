@@ -39,9 +39,10 @@ class User extends Authenticatable
         ];
     }
 
+    // Transfer yang diminta (dibuat) oleh user ini
     public function transfers()
     {
-        return $this->hasMany(Transfer::class, 'user_id', 'user_id');
+        return $this->hasMany(StockTransfer::class, 'requested_by', 'user_id');
     }
 
     public function warehouseAssignments()

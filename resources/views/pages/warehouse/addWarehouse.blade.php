@@ -34,38 +34,39 @@
 <div class="card">
     <div class="card-header fw-semibold">Tambah Warehouse</div>
     <div class="card-body">
-        <form action="/produk" method="POST">
+        <form action="{{ route('warehouses.store') }}" method="POST">
             @csrf
             <div class="row">
-                <div class="row-sm-6">
+                <div class="col-sm-6">
                     <div class="mb-3">
                         <label class="form-label">Nama Warehouse</label>
-                        <input type="text" name="nama_barang" class="form-control" value="{{old('name_id')}}">
-                        @error('name_id')
-                        <div id="emailHelp" class="form-text text-danger">{{$message}}</div>
+                        <input type="text" name="name" class="form-control" value="{{ old('name') }}">
+                        @error('name')
+                        <div class="form-text text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
-                <div class="row-sm-6">
+                <div class="col-sm-6">
                     <div class="mb-3">
                         <label class="form-label">Lokasi</label>
-                        <input type="text" name="nama_barang" class="form-control" value="{{old('location_id')}}">
-                        @error('location_id')
-                        <div id="emailHelp" class="form-text text-danger">{{$message}}</div>
+                        <input type="text" name="location" class="form-control" value="{{ old('location') }}">
+                        @error('location')
+                        <div class="form-text text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
-                <div class="row-sm-6">
+                <div class="col-sm-12">
                     <div class="mb-3">
-                        <label class="form-label">Alamat</label>
-                        <input type="number" name="unit" class="form-control" value="{{old('description')}}">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
                         @error('description')
-                        <div id="emailHelp" class="form-text text-danger">{{$message}}</div>
+                        <div class="form-text text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
                 <div class="col-sm-12 mt-3">
                     <button type="submit" class="btn btn-primary">Tambah Data</button>
+                    <a href="{{ route('warehouse.index') }}" class="btn btn-outline-secondary">Batal</a>
                 </div>
             </div>
         </form>
