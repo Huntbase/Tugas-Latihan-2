@@ -72,8 +72,6 @@
           <td>{{ $produk->nama_barang }}</td>
           <td>
             @php
-            // Warna badge dibuat konsisten per kategori berdasarkan hash nama kategori,
-            // jadi kategori yang sama selalu dapat warna yang sama tanpa perlu mapping manual
             $colors = ['#0d6efd', '#198754', '#fd7e14', '#6f42c1', '#d63384', '#20c997', '#dc3545'];
             $colorIndex = crc32($produk->category) % count($colors);
             @endphp

@@ -33,14 +33,26 @@ trait Auditable
 
             $after['user_name'] = $model->user_name ?? null;
 
+            // Jangan pernah simpan hash password ke audit log, walau
+            // cuma buat ditampilkan sebagai [HIDDEN] di view - lebih
+            // aman dibuang dari sumbernya daripada cuma disamarkan
+            // saat ditampilkan.
+            unset($before['password'], $after['password']);
+
             $description = json_encode([
                 'before' => $before,
                 'after'  => $after,
             ]);
         } elseif ($action === 'deleted') {
-            $description = json_encode($model->getOriginal());
+            $attributes = $model->getOriginal();
+            unset($attributes['password']);
+
+            $description = json_encode($attributes);
         } else {
-            $description = json_encode($model->getAttributes());
+            $attributes = $model->getAttributes();
+            unset($attributes['password']);
+
+            $description = json_encode($attributes);
         }
 
         AuditLogUser::create([

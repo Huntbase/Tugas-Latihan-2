@@ -46,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
 
     // WarehouseStock
     Route::middleware(['warehouse.selected'])->group(function () {
-        Route::resource('warehouseStocks', WarehouseStockController::class);
+        Route::resource('warehouseStocks', WarehouseStockController::class)->except(['show']);
     });
     // Stock Transfer
     Route::get('/stock-transfers', [StockTransferController::class, 'index'])->name('stock-transfers.index');
