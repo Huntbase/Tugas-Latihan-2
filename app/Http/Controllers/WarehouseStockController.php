@@ -28,41 +28,31 @@ class WarehouseStockController extends Controller
     }
 
     // Tampilkan daftar stok gudang aktif
+    // NOTE: pengecekan "sudah pilih gudang atau belum" ditangani
+    // middleware warehouse.selected di routes/web.php.
     public function index()
     {
         $warehouseId = session('active_warehouse_id');
-
-        if (!$warehouseId) {
-            return redirect()->route('warehouse.select')->with('error', 'Silakan pilih gudang terlebih dahulu.');
-        }
 
         $stocks = WarehouseStock::with('produk')
             ->where('warehouse_id', $warehouseId)
             ->get();
 
-        return view('pages.Warehouse_stocks.index', compact('stocks'));
+        return view('pages.warehouse_stocks.index', compact('stocks'));
     }
 
     // Form tambah stok
     public function create()
     {
-        $warehouseId = session('active_warehouse_id');
-        if (!$warehouseId) {
-            return redirect()->route('warehouse.select')->with('error', 'Pilih gudang dulu.');
-        }
-
         $produks = Produk::all();
 
-        return view('pages.Warehouse_stocks.create', compact('produks'));
+        return view('pages.warehouse_stocks.create', compact('produks'));
     }
 
     // Simpan stok baru
     public function store(Request $request)
     {
         $warehouseId = session('active_warehouse_id');
-        if (!$warehouseId) {
-            return redirect()->route('warehouse.select')->with('error', 'Pilih gudang dulu.');
-        }
 
         $request->validate([
             'barang_id' => 'required|exists:produk,barang_id',
@@ -84,7 +74,7 @@ class WarehouseStockController extends Controller
         $stock = WarehouseStock::findOrFail($id);
         $this->assertOwnsStock($stock);
 
-        return view('pages.Warehouse_stocks.edit', compact('stock'));
+        return view('pages.warehouse_stocks.edit', compact('stock'));
     }
 
     // Update stok

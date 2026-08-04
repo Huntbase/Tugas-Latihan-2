@@ -169,9 +169,6 @@
                                 data-bs-target="#hapus{{ $stock->ware_stock_id }}">
                                 Hapus
                             </button>
-
-                            <a href="{{ route('warehouseStocks.show', $stock->ware_stock_id ) }}"
-                                class="btn btn-info btn-sm btn-custom">Detail</a>
                         </div>
                     </td>
                 </tr>
