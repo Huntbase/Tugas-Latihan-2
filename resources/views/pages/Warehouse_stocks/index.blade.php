@@ -3,7 +3,9 @@
 @section('konten')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="mb-0">Stok Gudang</h1>
+    @if(auth()->user()->role_id !== 3)
     <a href="{{ route('warehouseStocks.create') }}" class="btn btn-primary">+ Tambah Stok</a>
+    @endif
 </div>
 
 @if (session('success'))
@@ -25,7 +27,9 @@
                     <th>No</th>
                     <th>Nama Produk</th>
                     <th>Jumlah Stok</th>
+                    @if(auth()->user()->role_id !== 3)
                     <th class="text-center">Aksi</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +38,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $stock->produk->nama_barang ?? '-' }}</td>
                     <td>{{ $stock->stock_quantity }}</td>
+                    @if(auth()->user()->role_id !== 3)
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">
                             <a href="{{ route('warehouseStocks.edit', $stock->ware_stock_id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -42,6 +47,7 @@
                             </button>
                         </div>
                     </td>
+                    @endif
                 </tr>
                 @empty
                 <tr>
@@ -53,6 +59,7 @@
     </div>
 </div>
 
+@if(auth()->user()->role_id !== 3)
 <!-- Modal Konfirmasi Hapus -->
 @foreach ($stocks as $stock)
 <div class="modal fade" id="hapus{{ $stock->ware_stock_id }}" tabindex="-1">
@@ -75,4 +82,5 @@
     </div>
 </div>
 @endforeach
+@endif
 @endsection

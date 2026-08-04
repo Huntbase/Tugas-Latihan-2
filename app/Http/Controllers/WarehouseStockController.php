@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class WarehouseStockController extends Controller
 {
+    // Role IDs sesuai tabel roles: 1=Admin, 2=Supervisor, 3=Staff
+    // Ubah stok manual (di luar alur transfer) cuma boleh Admin & Supervisor.
+    // Staff cuma boleh ubah stok lewat alur draft->submit->approve->ship->receive,
+    // bukan edit angka langsung - supaya semua perubahan stok Staff tetap
+    // tercatat rapi di audit log stock transfer.
+    private const CAN_MANAGE_STOCK = [1, 2];
+
     /**
      * Pastikan stok yang mau diedit/dihapus memang milik gudang yang
-     * berhak diakses user ini. Mencegah Supervisor/Staff mengubah stok
+     * berhak diakses user ini. Mencegah Supervisor mengubah stok
      * gudang lain lewat tebak-tebakan ID di URL.
      */
     private function assertOwnsStock(WarehouseStock $stock): void
@@ -27,7 +34,8 @@ class WarehouseStockController extends Controller
         abort_unless(in_array($stock->warehouse_id, $allowed), 403, 'Anda tidak memiliki akses ke stok warehouse ini.');
     }
 
-    // Tampilkan daftar stok gudang aktif
+    // Tampilkan daftar stok gudang aktif - terbuka untuk semua role
+    // (Staff tetap perlu lihat stok, cuma tidak boleh ubah manual).
     // NOTE: pengecekan "sudah pilih gudang atau belum" ditangani
     // middleware warehouse.selected di routes/web.php.
     public function index()
@@ -44,6 +52,8 @@ class WarehouseStockController extends Controller
     // Form tambah stok
     public function create()
     {
+        abort_unless(in_array(Auth::user()->role_id, self::CAN_MANAGE_STOCK), 403, 'Staff tidak memiliki akses untuk menambah stok secara manual.');
+
         $produks = Produk::all();
 
         return view('pages.warehouse_stocks.create', compact('produks'));
@@ -52,6 +62,8 @@ class WarehouseStockController extends Controller
     // Simpan stok baru
     public function store(Request $request)
     {
+        abort_unless(in_array(Auth::user()->role_id, self::CAN_MANAGE_STOCK), 403, 'Staff tidak memiliki akses untuk menambah stok secara manual.');
+
         $warehouseId = session('active_warehouse_id');
 
         $request->validate([
@@ -71,6 +83,8 @@ class WarehouseStockController extends Controller
     // Edit stok
     public function edit($id)
     {
+        abort_unless(in_array(Auth::user()->role_id, self::CAN_MANAGE_STOCK), 403, 'Staff tidak memiliki akses untuk mengubah stok secara manual.');
+
         $stock = WarehouseStock::findOrFail($id);
         $this->assertOwnsStock($stock);
 
@@ -80,6 +94,8 @@ class WarehouseStockController extends Controller
     // Update stok
     public function update(Request $request, $id)
     {
+        abort_unless(in_array(Auth::user()->role_id, self::CAN_MANAGE_STOCK), 403, 'Staff tidak memiliki akses untuk mengubah stok secara manual.');
+
         $stock = WarehouseStock::findOrFail($id);
         $this->assertOwnsStock($stock);
 
@@ -97,6 +113,8 @@ class WarehouseStockController extends Controller
     // Hapus stok
     public function destroy($id)
     {
+        abort_unless(in_array(Auth::user()->role_id, self::CAN_MANAGE_STOCK), 403, 'Staff tidak memiliki akses untuk menghapus stok secara manual.');
+
         $stock = WarehouseStock::findOrFail($id);
         $this->assertOwnsStock($stock);
 
