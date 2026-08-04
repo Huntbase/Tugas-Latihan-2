@@ -32,7 +32,7 @@
     }
 </style>
 <div class="card">
-    <div class="card-header fw-semibold">Tambah produk</div>
+    <div class="card-header fw-semibold">Tambah User</div>
     <div class="card-body">
         <form action="/Data_users" method="POST">
             @csrf

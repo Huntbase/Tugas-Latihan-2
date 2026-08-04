@@ -63,11 +63,10 @@
 
     .btn-custom:hover {
         color: white !important;
-        /* teks jadi putih saat hover */
     }
 </style>
 <h1 class="mb-4">Dashboard Warehouse</h1>
-
+<p>Selamat datang, <strong>{{ auth()->user()?->user_name ?? 'Guest' }}</strong>!</p>
 <form action="{{ route('warehouse.setActive') }}" method="POST" class="mb-4">
     @csrf
     <input type="hidden" name="redirect_to" value="warehouse.dashboard">
@@ -83,7 +82,6 @@
         </select>
     </div>
 </form>
-<p>Selamat datang, <strong>{{ auth()->user()?->user_name ?? 'Guest' }}</strong>!</p>
 
 <div class="card shadow-sm mb-4">
     <div class="card-body">
