@@ -1,61 +1,74 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
+<div id="top">
+<h1 align="center">🏭 Warehouse Management System</h1>
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <em>Sistem manajemen perpindahan stok antar gudang dengan alur persetujuan bertingkat dan penegakan segregation of duties.</em>
 </p>
 
-## About Laravel
+<p align="center">
+  <a href="https://github.com/Huntbase/Warehouse-Management-System">
+    <img src="https://img.shields.io/github/repo-size/Huntbase/Warehouse-Management-System?label=Repo%20Size&color=green&logo=github" alt="Repo Size">
+  </a>
+  <a href="https://github.com/Huntbase/Warehouse-Management-System/commits/main">
+    <img src="https://img.shields.io/github/last-commit/Huntbase/Warehouse-Management-System?label=Last%20Commit&color=blueviolet&logo=git" alt="Last Commit">
+  </a>
+  <br />
+  <img src="https://img.shields.io/badge/Laravel-11-FF2D20?logo=laravel&logoColor=white" alt="Laravel">
+  <img src="https://img.shields.io/badge/PHP-8.x-777BB4?logo=php&logoColor=white" alt="PHP">
+  <img src="https://img.shields.io/badge/MySQL-database-4479A1?logo=mysql&logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white" alt="Bootstrap">
+</p>
+</div>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+🔗 **Live Demo:** _[belum di-deploy — dalam proses]_
+📦 **Repo:** [github.com/Huntbase/Warehouse-Management-System](https://github.com/Huntbase/Warehouse-Management-System)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Masalah yang Diselesaikan
 
-## Learning Laravel
+Sistem transfer stok antar gudang secara manual rentan terhadap penyalahgunaan wewenang — misalnya satu pihak yang sama bisa mengajukan sekaligus menyetujui transfer stok tanpa pengawasan. Sistem ini dirancang dengan **segregation of duties**: pihak yang mengajukan transfer tidak dapat menyetujui transfer yang sama, dan setiap transisi status divalidasi melalui *policy layer* terpisah.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## ✨ Fitur Utama
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Role-Based Access Control (RBAC)** — tiga tingkat role (Admin, Supervisor, Staff) dengan hak akses berbeda, dikelola melalui tabel pivot `user_warehouse_assignments` untuk mengatur akses staf ke gudang tertentu
+- **Alur Persetujuan Stock Transfer 6-State** — status transfer stok berjalan melalui state machine (draft → menunggu approval → disetujui → dikirim → diterima/ditolak), dikelola melalui `StockTransferApprovalService`
+- **Segregation of Duties** — pengaju dan penyetuju transfer wajib berbeda pihak, ditegakkan lewat `StockTransferPolicy` via `Gate::policy()`
+- **Audit & Keamanan** — proses code audit internal yang menemukan dan memperbaiki sejumlah bug arsitektur dan migrasi, termasuk potensi kebocoran data sensitif (password hash) ke log aplikasi
+- **UI Modern** — dark/light mode dengan Bootstrap 5.3
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🔧 Teknologi yang Digunakan
 
-### Premium Partners
+- **Backend:** Laravel 11 (PHP)
+- **Database:** MySQL
+- **Frontend:** Bootstrap 5.3
+- **Arsitektur:** Service layer pattern (`StockTransferApprovalService`), Policy-based authorization (`StockTransferPolicy`)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## Desain Sistem
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Proyek ini dirancang dari nol — mulai dari ERD, migrasi database, hingga service layer dan policy — bukan berdasarkan template atau boilerplate. Keputusan arsitektur utama:
+- Pemisahan logic approval ke dedicated service class agar policy segregation of duties konsisten diterapkan di seluruh alur, bukan tersebar di controller
+- Pivot table `user_warehouse_assignments` untuk mendukung staf yang bertugas di lebih dari satu gudang
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🚀 Cara Menjalankan Lokal
 
-## Security Vulnerabilities
+```bash
+git clone https://github.com/Huntbase/Warehouse-Management-System.git
+cd Warehouse-Management-System
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<p align="center"><em>Dibuat oleh Benediktus Mikael Auwdinata</em></p>
